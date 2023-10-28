@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Iu1bz+lGXg2dt/vCl4gKfattLLEGzLoHqQaTjwuiBPDNvRjtzh29kO6BgZVltEYqpzYgNg/j4ihUVyh1RgKt2Q==",
+  "dgSpecHash": "bklAYIRdz9DfM5yPD3WsRWRw+MdlgpRIDI/XvE3tpPWg+otp7+jfMhu5zH0+HcIjAcXM+Ac5ZlKX4xgYcnH8ow==",
   "success": true,
   "projectFilePath": "C:\\Users\\Magda\\Desktop\\Licenta\\TMParking\\TMParking-Backend\\TMParking-Backend\\TMParking-Backend.csproj",
   "expectedPackageFiles": [
@@ -70,11 +70,7 @@
     "C:\\Users\\Magda\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
     "C:\\Users\\Magda\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512",
     "C:\\Users\\Magda\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "C:\\Users\\Magda\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
-    "C:\\Users\\Magda\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.15\\microsoft.netcore.app.ref.6.0.15.nupkg.sha512",
-    "C:\\Users\\Magda\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.15\\microsoft.windowsdesktop.app.ref.6.0.15.nupkg.sha512",
-    "C:\\Users\\Magda\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.15\\microsoft.aspnetcore.app.ref.6.0.15.nupkg.sha512",
-    "C:\\Users\\Magda\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.15\\microsoft.netcore.app.host.win-x64.6.0.15.nupkg.sha512"
+    "C:\\Users\\Magda\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
   "logs": []
 }
