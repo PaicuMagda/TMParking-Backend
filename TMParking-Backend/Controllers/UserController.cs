@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -43,7 +44,7 @@ namespace TMParking_Backend.Controllers
 
             var pass = CheckPasswordStrength(newUser.Password);
             if (!string.IsNullOrEmpty(pass))
-                return BadRequest(new { Message = pass.ToString() });
+                return BadRequest(new { Message = pass.ToString() }) ;
 
             newUser.Password = PasswordHasher.HashPassword(newUser.Password);
             newUser.Role = "User";
@@ -79,7 +80,7 @@ namespace TMParking_Backend.Controllers
             var token = CreateJwt(user);
             user.Token = token;
             await _dbContextTMParking.SaveChangesAsync();
-            return Ok(new { Message = "Login Success !", userObj });
+            return Ok(new { Message = "Login Success !", token= user.Token });
         }
 
         private string CreateJwt(User user)
@@ -89,8 +90,7 @@ namespace TMParking_Backend.Controllers
             var identity = new ClaimsIdentity(new Claim[]
                 {
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Email, user.Email),
-                
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
                 });
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
@@ -104,10 +104,10 @@ namespace TMParking_Backend.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
-        private string CheckPasswordStrength(string password)
+        private static string CheckPasswordStrength(string password)
         {
             StringBuilder sb = new StringBuilder();
-            if (password.Length < 8)
+            if (password.Length < 9)
                 sb.Append("Minimum password length should be 8 !" + Environment.NewLine);
             if (!(Regex.IsMatch(password, "[a-z]") && Regex.IsMatch(password, "[A-Z]") && Regex.IsMatch(password, "[0-9]")))
                 sb.Append("Password should be Alphanumeric !" + Environment.NewLine);
