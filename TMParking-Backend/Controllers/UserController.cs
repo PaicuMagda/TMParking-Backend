@@ -1,6 +1,4 @@
 ﻿
-using Azure.Core;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,8 +9,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using TMParking_Backend.Data;
 using TMParking_Backend.Helper;
+using TMParking_Backend.Helpers;
 using TMParking_Backend.Models;
 using TMParking_Backend.Models.Dto;
+using TMParking_Backend.UtilityService;
 
 namespace TMParking_Backend.Controllers
 {
@@ -22,10 +22,16 @@ namespace TMParking_Backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly DbContextTMParking _dbContextTMParking;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailService _emailService;
 
-        public UserController(DbContextTMParking dbContextTMParking)
+        public UserController(DbContextTMParking dbContextTMParking, IConfiguration configuration, IEmailService emailService)
         {
             _dbContextTMParking = dbContextTMParking;
+            _configuration = configuration;
+            _emailService = emailService;
+
         }
 
         [HttpGet]
@@ -182,6 +188,68 @@ namespace TMParking_Backend.Controllers
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
+
+            });
+        }
+
+        [HttpPost("send-email/{email}")]
+        public async Task<IActionResult> SendEmail(string email)
+        {
+            var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(a => a.Email == email);
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "Email doesn't exist "
+                });
+            }
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var emailToken = Convert.ToBase64String(tokenBytes);
+            user.ResetPasswordToken = emailToken;
+            user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
+            string from = _configuration["EmailSettings:From"];
+            var emailModel = new EmailModel(email, "ResetPassword!!", EmailBody.EmailStringBody(email, emailToken));
+            _emailService.SendEmail(emailModel);
+            _dbContextTMParking.Entry(user).State = EntityState.Modified;
+            await _dbContextTMParking.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Email Sent !"
+            });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
+            var user = await _dbContextTMParking.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    StatusCode = 404,
+                    Message = "User Doesn't Exist "
+                });
+            }
+            var tokenCode = user.ResetPasswordToken;
+            DateTime emailTokenExpiry = user.ResetPasswordExpiry;
+            if (tokenCode != resetPasswordDto.EmailToken || emailTokenExpiry < DateTime.Now)
+            {
+                return BadRequest(new
+                {
+                    StatusCode = 400,
+                    Message = "Invalid Reset link"
+                });
+            }
+            user.Password = PasswordHasher.HashPassword(resetPasswordDto.NewPassword);
+            _dbContextTMParking.Entry(user).State = EntityState.Modified;
+            await _dbContextTMParking.SaveChangesAsync();
+            return Ok(new
+            {
+                StatusCode = 200,
+                Message = "Password Reset Successfully"
 
             });
         }
