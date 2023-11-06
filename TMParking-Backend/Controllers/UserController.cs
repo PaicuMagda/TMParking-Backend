@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,7 +22,6 @@ namespace TMParking_Backend.Controllers
     {
         private readonly DbContextTMParking _dbContextTMParking;
         private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailService _emailService;
 
         public UserController(DbContextTMParking dbContextTMParking, IConfiguration configuration, IEmailService emailService)
@@ -178,8 +176,10 @@ namespace TMParking_Backend.Controllers
             var principal = GetPrincipleFromExpiredToken(accessToken);
             var username = principal.Identity.Name;
             var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(u => u.Username == username);
+
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return BadRequest("Invalid Request");
+
             var newAccessToken = CreateJwt(user);
             var newRefreshToken = CreateRefreshToken();
             user.RefreshToken = newRefreshToken;
@@ -196,6 +196,7 @@ namespace TMParking_Backend.Controllers
         public async Task<IActionResult> SendEmail(string email)
         {
             var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(a => a.Email == email);
+
             if (user == null)
             {
                 return NotFound(new
@@ -204,12 +205,13 @@ namespace TMParking_Backend.Controllers
                     Message = "Email doesn't exist "
                 });
             }
+            var nameUser = user.FirstName;
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var emailToken = Convert.ToBase64String(tokenBytes);
             user.ResetPasswordToken = emailToken;
             user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
             string from = _configuration["EmailSettings:From"];
-            var emailModel = new EmailModel(email, "ResetPassword!!", EmailBody.EmailStringBody(email, emailToken));
+            var emailModel = new EmailModel(email, "ResetPassword!!", EmailBody.EmailStringBody(email, emailToken, nameUser));
             _emailService.SendEmail(emailModel);
             _dbContextTMParking.Entry(user).State = EntityState.Modified;
             await _dbContextTMParking.SaveChangesAsync();
