@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XbCOcvaFpgX+PEH9MtAp4tTiw0uAHvXJ/RCgaDBFQ5XMPlHOguMsHH2RM0AMgSPvpffi2CVET7h9rxOpRLtpsA==",
+  "dgSpecHash": "tv6iu98W7xkUCYNYm2DWYR60cN4yvg9gzDptBt0u+ebDMKQ9Mmwi5UK6dpdYGD4IwjRuGkWkRf+Mm/ROkah/fQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Magda\\Desktop\\Licenta\\TMParking\\TMParking-Backend\\TMParking-Backend\\TMParking-Backend.csproj",
+  "projectFilePath": "C:\\Users\\Magda\\Desktop\\Licenta\\TMPartking-Backend\\TMParking-Backend\\TMParking-Backend\\TMParking-Backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Magda\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Magda\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
