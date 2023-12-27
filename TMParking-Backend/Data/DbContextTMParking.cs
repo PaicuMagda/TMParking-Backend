@@ -7,9 +7,11 @@ namespace TMParking_Backend.Data
     {
         public DbContextTMParking(DbContextOptions<DbContextTMParking> options) : base(options)
         {
-
         }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<FileInterface> Files{get; set;}
+      
 
       
     }
