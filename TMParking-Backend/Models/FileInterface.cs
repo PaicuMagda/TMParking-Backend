@@ -9,6 +9,8 @@ namespace TMParking_Backend.Models
 
         public string FileName { get; set; }    
 
-        public byte[] FileData { get; set; }
+        public string FileDataAsBase64 { get; set; }
+
+        public string FilePath { get; set; }
     }
 }
