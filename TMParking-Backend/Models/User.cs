@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TMParking_Backend.Enums;
 
 namespace TMParking_Backend.Models
 {
@@ -11,7 +12,16 @@ namespace TMParking_Backend.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
+        public RolesEnum Role { get; set; }
+        public string Address { get; set; }
+        public int ZipCode { get; set; }
+        public string State { get;set; }
+        public bool isActive { get; set; }  
+        public int PhoneNumber { get; set; }    
+        public DateTime dateOfBirth { get; set; }   
+        public int PersonalNumericalNumber { get; set; }    
+        public bool licenseValid { get; set; }  
+        public string imageUrl { get; set; }
         public string Token { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }

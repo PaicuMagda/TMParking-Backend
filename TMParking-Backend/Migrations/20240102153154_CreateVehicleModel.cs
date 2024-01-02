@@ -5,7 +5,7 @@
 namespace TMParking_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class addedRefreshToken : Migration
+    public partial class CreateVehicleModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using TMParking_Backend.Data;
+using TMParking_Backend.Enums;
 using TMParking_Backend.Helper;
 using TMParking_Backend.Helpers;
 using TMParking_Backend.Models;
@@ -54,7 +55,7 @@ namespace TMParking_Backend.Controllers
                 return BadRequest(new { Message = pass.ToString() });
 
             newUser.Password = PasswordHasher.HashPassword(newUser.Password);
-            newUser.Role = "User";
+            newUser.Role = RolesEnum.User;
             newUser.Token = "";
             await _dbContextTMParking.Users.AddAsync(newUser);
             await _dbContextTMParking.SaveChangesAsync();
@@ -106,7 +107,7 @@ namespace TMParking_Backend.Controllers
             var key = Encoding.ASCII.GetBytes("veryverysecret...");
             var identity = new ClaimsIdentity(new Claim[]
                 {
-                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
                 });
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
