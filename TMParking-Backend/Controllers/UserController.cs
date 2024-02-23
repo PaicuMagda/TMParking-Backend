@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -32,14 +33,6 @@ namespace TMParking_Backend.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var users = await _dbContextTMParking.Users.ToListAsync();
-            return Ok(users);
-
-        }
-
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] User newUser)
         {
@@ -50,6 +43,7 @@ namespace TMParking_Backend.Controllers
             if (await UsernameAlreadyExistsAsync(newUser.Username)) return BadRequest(new { Message = "Username already exists !" });
 
             var pass = CheckPasswordStrength(newUser.Password);
+
             if (!string.IsNullOrEmpty(pass))
                 return BadRequest(new { Message = pass.ToString() });
 
@@ -66,7 +60,6 @@ namespace TMParking_Backend.Controllers
 
         private Task<bool> UsernameAlreadyExistsAsync(string username)
         => _dbContextTMParking.Users.AnyAsync(x => x.Username == username);
-
 
 
         [HttpPost("authenticate")]
@@ -95,8 +88,7 @@ namespace TMParking_Backend.Controllers
             return Ok(new TokenApiDto()
             {
                 AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken,
-                Message = "Authentication successful",
+                RefreshToken = newRefreshToken
             });
         }
 
@@ -107,8 +99,10 @@ namespace TMParking_Backend.Controllers
             var identity = new ClaimsIdentity(new Claim[]
                 {
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.NameIdentifier,user.UserId.ToString())
                 });
+
             var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -125,7 +119,9 @@ namespace TMParking_Backend.Controllers
         {
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var refreshToken = Convert.ToBase64String(tokenBytes);
+
             var tokenInUser = _dbContextTMParking.Users.Any(a => a.RefreshToken == refreshToken);
+
             if (tokenInUser)
             {
                 return CreateRefreshToken();
@@ -167,7 +163,7 @@ namespace TMParking_Backend.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh(TokenApiDto tokenApiDto)
+        public async Task<IActionResult> Refresh([FromBody]TokenApiDto tokenApiDto)
         {
             if (tokenApiDto is null)
                 return BadRequest("Invalid Client Request");
@@ -186,8 +182,8 @@ namespace TMParking_Backend.Controllers
             await _dbContextTMParking.SaveChangesAsync();
             return Ok(new TokenApiDto()
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
 
             });
         }
@@ -209,7 +205,7 @@ namespace TMParking_Backend.Controllers
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var emailToken = Convert.ToBase64String(tokenBytes);
             user.ResetPasswordToken = emailToken;
-            user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
+            user.ResetPasswordExpiry = DateTime.Now.AddDays(1);
             string from = _configuration["EmailSettings:From"];
             var emailModel = new EmailModel(email, "ResetPassword!!", EmailBody.EmailStringBody(email, emailToken, nameUser));
             _emailService.SendEmail(emailModel);
@@ -255,5 +251,45 @@ namespace TMParking_Backend.Controllers
 
             });
         }
+
+        //[Authorize]
+        [HttpGet]
+        public async Task<ActionResult<User>> GetAllUsers()
+        {
+            return Ok(await _dbContextTMParking.Users.ToListAsync());
+        }
+
+        [HttpPut("update-user/{id}")]
+        public async Task<ActionResult<User>> UpdateUser(int id,[FromBody]User userForUpdate)
+        {
+            var user = await _dbContextTMParking.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound("User Not Found!");
+            }
+
+            user.FirstName = userForUpdate.FirstName;
+            user.LastName = userForUpdate.LastName;
+            user.Email = userForUpdate.Email;
+            user.Password = userForUpdate.Password;
+            user.Role=userForUpdate.Role;
+            user.Address = userForUpdate.Address;
+            user.ZipCode = userForUpdate.ZipCode;
+            user.state = userForUpdate.state;
+            user.IsActive = userForUpdate.IsActive;
+            user.Phone=userForUpdate.Phone;
+            user.DateOfBirth = userForUpdate.DateOfBirth;
+            user.PNC = userForUpdate.PNC;
+            user.VehicleRegistered=userForUpdate.VehicleRegistered;
+            user.LicenseValid=userForUpdate.LicenseValid;
+            user.ImageUrl = userForUpdate.ImageUrl;
+
+           await _dbContextTMParking.SaveChangesAsync();
+
+            return Ok("User updated successfully.");
+        }
+
+
     }
 }
