@@ -27,6 +27,7 @@ namespace TMParking_Backend.Models
         public string VehicleRegistered { get; set; }   
         public bool LicenseValid { get; set; }
         public string ImageUrl { get; set; }
+        public ICollection<Vehicle> Vehicles { get; }=new List<Vehicle>();
 
     }
 }
