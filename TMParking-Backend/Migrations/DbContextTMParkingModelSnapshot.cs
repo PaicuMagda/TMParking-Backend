@@ -22,6 +22,87 @@ namespace TMParking_Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaces", b =>
+                {
+                    b.Property<int>("ParkingSpacesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParkingSpacesId"));
+
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AvailableParkingSpaces")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAgriculturalMachineryAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCargoVehicleAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFree")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPersonalVehicleAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublicTransportAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVerifiedByAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVideoSurveilance")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PaidParking")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ParkingSpacesOwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("PaymentForSubscription")
+                        .HasColumnType("real");
+
+                    b.Property<float>("PaymentPerDay")
+                        .HasColumnType("real");
+
+                    b.Property<float>("PaymentPerHour")
+                        .HasColumnType("real");
+
+                    b.Property<bool>("SomethingIsWrong")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ParkingSpacesId");
+
+                    b.HasIndex("ParkingSpacesOwnerId");
+
+                    b.ToTable("ParkingSpaces");
+                });
+
             modelBuilder.Entity("TMParking_Backend.Models.TimisoaraArea", b =>
                 {
                     b.Property<int>("IdTimisoaraArea")
@@ -94,6 +175,9 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Token")
                         .HasColumnType("nvarchar(max)");
 
@@ -105,9 +189,6 @@ namespace TMParking_Backend.Migrations
 
                     b.Property<int>("ZipCode")
                         .HasColumnType("int");
-
-                    b.Property<string>("state")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
@@ -143,7 +224,7 @@ namespace TMParking_Backend.Migrations
                     b.Property<bool>("SomethingIsWrong")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("VehicleOwnerUserId")
+                    b.Property<int>("VehicleOwnerId")
                         .HasColumnType("int");
 
                     b.Property<int>("Year")
@@ -157,22 +238,37 @@ namespace TMParking_Backend.Migrations
 
                     b.HasKey("VehicleId");
 
-                    b.HasIndex("VehicleOwnerUserId");
+                    b.HasIndex("VehicleOwnerId");
 
                     b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaces", b =>
+                {
+                    b.HasOne("TMParking_Backend.Models.User", "ParkingSpacesOwner")
+                        .WithMany("ParkingSpaces")
+                        .HasForeignKey("ParkingSpacesOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParkingSpacesOwner");
                 });
 
             modelBuilder.Entity("TMParking_Backend.Models.Vehicle", b =>
                 {
                     b.HasOne("TMParking_Backend.Models.User", "VehicleOwner")
                         .WithMany("Vehicles")
-                        .HasForeignKey("VehicleOwnerUserId");
+                        .HasForeignKey("VehicleOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("VehicleOwner");
                 });
 
             modelBuilder.Entity("TMParking_Backend.Models.User", b =>
                 {
+                    b.Navigation("ParkingSpaces");
+
                     b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618

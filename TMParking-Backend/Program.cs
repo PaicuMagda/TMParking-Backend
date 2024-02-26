@@ -19,6 +19,11 @@ builder.Services.AddDbContext<DbContextTMParking>(options =>
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

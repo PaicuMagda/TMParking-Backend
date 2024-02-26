@@ -16,6 +16,7 @@ namespace TMParking_Backend.Models
         public bool IsVerifiedByAdmin { get; set; } 
         public bool SomethingIsWrong { get; set; }
         public DateTime DateAdded { get; set; }
+        public int VehicleOwnerId { get; set; }
         public User VehicleOwner { get; set; }
 
     }

@@ -19,7 +19,7 @@ namespace TMParking_Backend.Models
         public DateTime ResetPasswordExpiry { get; set; }
         public string Address { get; set; }
         public int ZipCode { get; set; }
-        public string state { get; set; }
+        public string   State { get; set; }
         public bool IsActive { get; set; }
         public int Phone { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -27,7 +27,7 @@ namespace TMParking_Backend.Models
         public string VehicleRegistered { get; set; }   
         public bool LicenseValid { get; set; }
         public string ImageUrl { get; set; }
-        public ICollection<Vehicle> Vehicles { get; }=new List<Vehicle>();
-
+        public ICollection<Vehicle> Vehicles { get;}=new List<Vehicle>();
+        public ICollection<ParkingSpaces> ParkingSpaces { get;}=new List<ParkingSpaces>();
     }
 }

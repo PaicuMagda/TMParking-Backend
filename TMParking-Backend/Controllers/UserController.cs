@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,7 +29,6 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking = dbContextTMParking;
             _configuration = configuration;
             _emailService = emailService;
-
         }
 
         [HttpPost("register")]
@@ -163,7 +161,7 @@ namespace TMParking_Backend.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody]TokenApiDto tokenApiDto)
+        public async Task<IActionResult> Refresh([FromBody] TokenApiDto tokenApiDto)
         {
             if (tokenApiDto is null)
                 return BadRequest("Invalid Client Request");
@@ -256,11 +254,15 @@ namespace TMParking_Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<User>> GetAllUsers()
         {
-            return Ok(await _dbContextTMParking.Users.ToListAsync());
+            var users = await _dbContextTMParking.Users
+                .Include(u => u.Vehicles)
+                .Include(u => u.ParkingSpaces)
+                .ToListAsync();
+            return Ok(users);
         }
 
         [HttpPut("update-user/{id}")]
-        public async Task<ActionResult<User>> UpdateUser(int id,[FromBody]User userForUpdate)
+        public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] User userForUpdate)
         {
             var user = await _dbContextTMParking.Users.FindAsync(id);
 
@@ -273,19 +275,19 @@ namespace TMParking_Backend.Controllers
             user.LastName = userForUpdate.LastName;
             user.Email = userForUpdate.Email;
             user.Password = userForUpdate.Password;
-            user.Role=userForUpdate.Role;
+            user.Role = userForUpdate.Role;
             user.Address = userForUpdate.Address;
             user.ZipCode = userForUpdate.ZipCode;
-            user.state = userForUpdate.state;
+            user.State = userForUpdate.State;
             user.IsActive = userForUpdate.IsActive;
-            user.Phone=userForUpdate.Phone;
+            user.Phone = userForUpdate.Phone;
             user.DateOfBirth = userForUpdate.DateOfBirth;
             user.PNC = userForUpdate.PNC;
-            user.VehicleRegistered=userForUpdate.VehicleRegistered;
-            user.LicenseValid=userForUpdate.LicenseValid;
+            user.VehicleRegistered = userForUpdate.VehicleRegistered;
+            user.LicenseValid = userForUpdate.LicenseValid;
             user.ImageUrl = userForUpdate.ImageUrl;
 
-           await _dbContextTMParking.SaveChangesAsync();
+            await _dbContextTMParking.SaveChangesAsync();
 
             return Ok("User updated successfully.");
         }
