@@ -6,7 +6,7 @@ using TMParking_Backend.Models;
 
 namespace TMParking_Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class TimisoaraAreasController : ControllerBase
     {

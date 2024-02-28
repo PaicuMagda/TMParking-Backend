@@ -5,6 +5,8 @@ using TMParking_Backend.Models;
 
 namespace TMParking_Backend.Controllers
 {
+    [Route("[controller]")]
+    [ApiController]
     public class VehicleController : ControllerBase
     {
         private readonly DbContextTMParking _dbContextTMParking;

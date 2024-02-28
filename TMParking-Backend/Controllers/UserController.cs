@@ -15,7 +15,7 @@ using TMParking_Backend.UtilityService;
 
 namespace TMParking_Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
 
     public class UserController : ControllerBase
