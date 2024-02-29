@@ -12,14 +12,14 @@ namespace TMParking_Backend.Models
         public bool IsPersonalVehicleAccepted { get; set; } 
         public bool IsPublicTransportAccepted { get; set; }
         public bool IsAgriculturalMachineryAccepted { get; set; }
-        public string ImageUrl { get; set; }
+        public string ImageProfile { get; set; }
+        public string LeasePermit { get; set; } 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime AddedDate { get; set; }
         public bool IsFree { get; set; }
         public bool IsVideoSurveilance { get; set; }
         public string Description { get; set; }
-        public bool PaidParking { get; set; }
         public bool IsDraft { get; set; }
         public float PaymentPerHour { get;set; }
         public float PaymentPerDay { get;set; }

@@ -16,6 +16,13 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking = dbContextTMParking;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllParkingSpaces()
+        {
+            var parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(p => p.ParkingSpacesOwner).ToListAsync();
+            return Ok(parkingSpaces);
+        }
+
         [HttpPost]
         public async Task<IActionResult> RegisterParkingSpaces([FromBody] ParkingSpaces parkingSpaces)
         {
@@ -25,13 +32,6 @@ namespace TMParking_Backend.Controllers
             await _dbContextTMParking.ParkingSpaces.AddAsync(parkingSpaces);
             await _dbContextTMParking.SaveChangesAsync();
             return Ok(new { Message= "Parking spaces successfully added !" });
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllParkingSpaces()
-        { 
-          var parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(p=>p.ParkingSpacesOwner).ToListAsync();
-          return Ok(parkingSpaces);
         }
     }
 
