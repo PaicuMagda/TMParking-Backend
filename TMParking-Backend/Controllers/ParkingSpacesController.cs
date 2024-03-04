@@ -31,7 +31,21 @@ namespace TMParking_Backend.Controllers
 
             await _dbContextTMParking.ParkingSpaces.AddAsync(parkingSpaces);
             await _dbContextTMParking.SaveChangesAsync();
-            return Ok(new { Message= "Parking spaces successfully added !" });
+            return Ok(new { Message = "Parking spaces successfully added !" });
+        }
+
+        [HttpGet("{userId}/parking-spaces")]
+        public async Task<ActionResult<IEnumerable<ParkingSpaces>>> GetMyParkingSpaces(int userId)
+        {
+            var user = await _dbContextTMParking.Users.Include(u=>u.ParkingSpaces).FirstOrDefaultAsync(u=>u.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user.ParkingSpaces.ToList();
+        
         }
     }
 
