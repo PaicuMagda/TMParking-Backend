@@ -33,5 +33,18 @@ namespace TMParking_Backend.Controllers
             await _dbContextTMParking.SaveChangesAsync();
             return Ok(new { Message = "Vehicle Registered !" });
         }
+
+        [HttpGet("{userId}/vehicles")]
+        public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicles(int userId)
+        { 
+          var user = await _dbContextTMParking.Users.Include(u=>u.Vehicles).FirstOrDefaultAsync(u=>u.UserId==userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user.Vehicles.ToList();
+        }
     }
 }
