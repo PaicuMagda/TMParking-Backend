@@ -283,7 +283,6 @@ namespace TMParking_Backend.Controllers
             user.Phone = userForUpdate.Phone;
             user.DateOfBirth = userForUpdate.DateOfBirth;
             user.PNC = userForUpdate.PNC;
-            user.VehicleRegistered = userForUpdate.VehicleRegistered;
             user.LicenseValid = userForUpdate.LicenseValid;
             user.ImageUrl = userForUpdate.ImageUrl;
 
