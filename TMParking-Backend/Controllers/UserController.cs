@@ -302,5 +302,18 @@ namespace TMParking_Backend.Controllers
             return Ok(user);
         }
 
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUserById(int userId)
+        { 
+          User user = await _dbContextTMParking.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            _dbContextTMParking.Users.Remove(user);
+            _dbContextTMParking.SaveChanges();
+            return Ok(new { Message = "User Account delete successfully !" });
+        }
     }
 }
