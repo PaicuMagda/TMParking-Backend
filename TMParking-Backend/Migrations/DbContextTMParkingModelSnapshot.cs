@@ -148,9 +148,6 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("LicenseValid")
-                        .HasColumnType("bit");
-
                     b.Property<int>("PNC")
                         .HasColumnType("int");
 

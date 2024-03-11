@@ -151,7 +151,7 @@ namespace TMParking_Backend.Controllers
         private static string CheckPasswordStrength(string password)
         {
             StringBuilder sb = new StringBuilder();
-            if (password.Length < 9)
+            if (password.Length <= 8)
                 sb.Append("Minimum password length should be 8 !" + Environment.NewLine);
             if (!(Regex.IsMatch(password, "[a-z]") && Regex.IsMatch(password, "[A-Z]") && Regex.IsMatch(password, "[0-9]")))
                 sb.Append("Password should be Alphanumeric !" + Environment.NewLine);
@@ -283,7 +283,6 @@ namespace TMParking_Backend.Controllers
             user.Phone = userForUpdate.Phone;
             user.DateOfBirth = userForUpdate.DateOfBirth;
             user.PNC = userForUpdate.PNC;
-            user.LicenseValid = userForUpdate.LicenseValid;
             user.ImageUrl = userForUpdate.ImageUrl;
 
             await _dbContextTMParking.SaveChangesAsync();
@@ -291,6 +290,17 @@ namespace TMParking_Backend.Controllers
             return Ok("User updated successfully.");
         }
 
+        [HttpGet("{userId}/user-account")]
+        public async Task<ActionResult> GetUserLogged(int userId)
+        {
+            var user = await _dbContextTMParking.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null) 
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
 
     }
 }

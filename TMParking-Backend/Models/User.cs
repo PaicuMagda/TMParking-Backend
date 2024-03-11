@@ -24,9 +24,12 @@ namespace TMParking_Backend.Models
         public int Phone { get; set; }
         public string DateOfBirth { get; set; }
         public int PNC { get; set; }
-        public bool LicenseValid { get; set; }
         public string ImageUrl { get; set; }
         public ICollection<Vehicle> Vehicles { get;}=new List<Vehicle>();
         public ICollection<ParkingSpaces> ParkingSpaces { get;}=new List<ParkingSpaces>();
+        public string FullName
+        {
+            get { return FirstName + " " + LastName; }
+        }
     }
 }

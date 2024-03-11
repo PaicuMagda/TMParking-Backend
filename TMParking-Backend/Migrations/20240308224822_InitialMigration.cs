@@ -5,24 +5,25 @@
 namespace TMParking_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangeTypeOfOneProperty2 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ImageUrl",
-                table: "Vehicles",
-                newName: "ImageProfileBase64");
+            migrationBuilder.DropColumn(
+                name: "LicenseValid",
+                table: "Users");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "ImageProfileBase64",
-                table: "Vehicles",
-                newName: "ImageUrl");
+            migrationBuilder.AddColumn<bool>(
+                name: "LicenseValid",
+                table: "Users",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
         }
     }
 }
