@@ -16,12 +16,14 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking = dbContextTMParking;
         }
 
+
         [HttpGet("vehicles")]
         public async Task<IActionResult> GetAllVehicles()
         {
-            var vehicles = await _dbContextTMParking.Vehicles.Include(v=>v.VehicleOwner).ToListAsync();
+            var vehicles = await _dbContextTMParking.Vehicles.Include(v => v.VehicleOwner).ToListAsync();
             return Ok(vehicles);
         }
+
 
         [HttpPost("register-vehicle")]
         public async Task<IActionResult> RegisterVehicle([FromBody] Vehicle newVehicle)
@@ -34,10 +36,11 @@ namespace TMParking_Backend.Controllers
             return Ok(new { Message = "Vehicle Registered !" });
         }
 
+
         [HttpGet("{userId}/vehicles")]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicles(int userId)
-        { 
-          var user = await _dbContextTMParking.Users.Include(u=>u.Vehicles).FirstOrDefaultAsync(u=>u.UserId==userId);
+        {
+            var user = await _dbContextTMParking.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user == null)
             {
@@ -45,6 +48,21 @@ namespace TMParking_Backend.Controllers
             }
 
             return user.Vehicles.ToList();
+        }
+
+        [HttpDelete("{vehicleId}")]
+        public async Task<IActionResult> DeleteVehicleById(int vehicleId)
+        {
+            Vehicle vehicle = await _dbContextTMParking.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == vehicleId);
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            _dbContextTMParking.Vehicles.Remove(vehicle);
+            _dbContextTMParking.SaveChanges();
+            return Ok(new { Message = "Vehicle delete successfully !" });
         }
     }
 }
