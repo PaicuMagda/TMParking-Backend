@@ -72,7 +72,7 @@ namespace TMParking_Backend.Controllers
 
             _dbContextTMParking.ParkingSpaces.Remove(parkingSpaces);
             _dbContextTMParking.SaveChanges();
-            return Ok(new { Message = "Parking Spaces delete successfully !"});
+            return Ok(new { Message = "Parking Spaces was successfully deleted !"});
         }
     
     }

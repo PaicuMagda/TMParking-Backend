@@ -67,7 +67,6 @@ namespace TMParking_Backend.Controllers
                 return BadRequest();
 
             var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(x => x.Username == userObj.Username);
-
             if (user == null)
                 return NotFound(new { Message = "User Not Found !" });
 
@@ -75,7 +74,6 @@ namespace TMParking_Backend.Controllers
             {
                 return BadRequest(new { Message = "Incorect Password !" });
             }
-
             user.Token = CreateJwt(user);
             var newAccessToken = user.Token;
             var newRefreshToken = CreateRefreshToken();
@@ -255,8 +253,6 @@ namespace TMParking_Backend.Controllers
         public async Task<ActionResult<User>> GetAllUsers()
         {
             var users = await _dbContextTMParking.Users
-                .Include(u => u.Vehicles)
-                .Include(u => u.ParkingSpaces)
                 .ToListAsync();
             return Ok(users);
         }
@@ -313,7 +309,7 @@ namespace TMParking_Backend.Controllers
             }
             _dbContextTMParking.Users.Remove(user);
             _dbContextTMParking.SaveChanges();
-            return Ok(new { Message = "User Account delete successfully !" });
+            return Ok(new { Message = "User Account was successfully deleted !" });
         }
     }
 }

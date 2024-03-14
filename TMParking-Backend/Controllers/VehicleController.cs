@@ -46,7 +46,6 @@ namespace TMParking_Backend.Controllers
             {
                 return NotFound();
             }
-
             return user.Vehicles.ToList();
         }
 
@@ -59,10 +58,9 @@ namespace TMParking_Backend.Controllers
             {
                 return NotFound();
             }
-
             _dbContextTMParking.Vehicles.Remove(vehicle);
             _dbContextTMParking.SaveChanges();
-            return Ok(new { Message = "Vehicle delete successfully !" });
+            return Ok(new { Message = "Vehicle was successfully deleted !" });
         }
     }
 }
