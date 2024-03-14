@@ -16,12 +16,14 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking = dbContextTMParking;
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetAllParkingSpaces()
         {
             var parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(p => p.ParkingSpacesOwner).ToListAsync();
             return Ok(parkingSpaces);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> RegisterParkingSpaces([FromBody] ParkingSpaces parkingSpaces)
@@ -33,6 +35,7 @@ namespace TMParking_Backend.Controllers
             await _dbContextTMParking.SaveChangesAsync();
             return Ok(new { Message = "Parking spaces successfully added !" });
         }
+
 
         [HttpGet("{userId}/parking-spaces")]
         public async Task<ActionResult<IEnumerable<ParkingSpaces>>> GetMyParkingSpaces(int userId)
@@ -48,6 +51,7 @@ namespace TMParking_Backend.Controllers
         
         }
 
+
         [HttpGet("{parkingSpacesId}/parkingSpaces")]
         public async Task<IActionResult> GetParkingSpacesById(int parkingSpacesId)
         { 
@@ -59,6 +63,7 @@ namespace TMParking_Backend.Controllers
             }
         return Ok(parkingSpaces);
         }
+
 
         [HttpDelete("{parkingSpacesId}")]
         public async Task<IActionResult> DeleteParkingSpaces(int parkingSpacesId)
@@ -74,6 +79,43 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking.SaveChanges();
             return Ok(new { Message = "Parking Spaces was successfully deleted !"});
         }
-    
+
+
+        [HttpPut("update-parking-spaces/{id}")]
+        public async Task<IActionResult> UpdateParkingSpaces(int id, ParkingSpaces parkingSpaces)
+        {
+            var parkingSpacesToUpdate = await _dbContextTMParking.ParkingSpaces.FirstOrDefaultAsync(p => p.ParkingSpacesId == id);
+
+            if (parkingSpacesToUpdate == null)
+            {
+                return NotFound("Parking Spaces not found !");
+            }
+
+            parkingSpacesToUpdate.Name = parkingSpaces.Name;
+            parkingSpacesToUpdate.Address=parkingSpaces.Address;
+            parkingSpacesToUpdate.AvailableParkingSpaces = parkingSpaces.AvailableParkingSpaces;
+            parkingSpacesToUpdate.IsCargoVehicleAccepted =parkingSpaces.IsCargoVehicleAccepted;
+            parkingSpacesToUpdate.IsPersonalVehicleAccepted=parkingSpaces.IsPersonalVehicleAccepted;
+            parkingSpacesToUpdate.IsPublicTransportAccepted=parkingSpaces.IsPublicTransportAccepted;
+            parkingSpacesToUpdate.IsAgriculturalMachineryAccepted=parkingSpaces.IsAgriculturalMachineryAccepted;    
+            parkingSpacesToUpdate.ImageProfile=parkingSpaces.ImageProfile;
+            parkingSpacesToUpdate.LeasePermit=parkingSpaces.LeasePermit;
+            parkingSpacesToUpdate.StartDate = parkingSpaces.StartDate;
+            parkingSpacesToUpdate.EndDate = parkingSpaces.EndDate;
+            parkingSpacesToUpdate.AddedDate = parkingSpaces.AddedDate;
+            parkingSpacesToUpdate.IsFree= parkingSpaces.IsFree;
+            parkingSpacesToUpdate.IsVideoSurveilance=parkingSpaces.IsVideoSurveilance;
+            parkingSpacesToUpdate.Description=parkingSpaces.Description;
+            parkingSpacesToUpdate.IsDraft=parkingSpaces.IsDraft;
+            parkingSpacesToUpdate.PaymentPerHour = parkingSpaces.PaymentPerHour;
+            parkingSpacesToUpdate.PaymentPerDay=parkingSpaces.PaymentPerDay;
+            parkingSpacesToUpdate.PaymentForSubscription=parkingSpaces.PaymentForSubscription;
+            parkingSpacesToUpdate.IsVerifiedByAdmin = parkingSpaces.IsVerifiedByAdmin;
+            parkingSpaces.SomethingIsWrong=parkingSpaces.SomethingIsWrong;
+
+            await _dbContextTMParking.SaveChangesAsync();
+
+            return Ok(new { Message = "Parking Spaces update successfully !" });
+        }
     }
 }

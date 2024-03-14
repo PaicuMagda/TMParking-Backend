@@ -261,12 +261,10 @@ namespace TMParking_Backend.Controllers
         public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] User userForUpdate)
         {
             var user = await _dbContextTMParking.Users.FindAsync(id);
-
             if (user == null)
             {
                 return NotFound("User Not Found!");
             }
-
             user.FirstName = userForUpdate.FirstName;
             user.LastName = userForUpdate.LastName;
             user.Email = userForUpdate.Email;

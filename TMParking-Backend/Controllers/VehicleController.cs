@@ -49,6 +49,7 @@ namespace TMParking_Backend.Controllers
             return user.Vehicles.ToList();
         }
 
+
         [HttpDelete("{vehicleId}")]
         public async Task<IActionResult> DeleteVehicleById(int vehicleId)
         {
@@ -61,6 +62,31 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking.Vehicles.Remove(vehicle);
             _dbContextTMParking.SaveChanges();
             return Ok(new { Message = "Vehicle was successfully deleted !" });
+        }
+
+        [HttpPut("update-vehicle/{id}")]
+        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] Vehicle vehicle) {
+
+            Vehicle vehicleToUpdate = await _dbContextTMParking.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == id);
+
+            if (vehicleToUpdate == null)
+            {
+                return NotFound("Vehicle not found !");
+            }
+            vehicleToUpdate.ImageProfileBase64 = vehicle.ImageProfileBase64;
+            vehicleToUpdate.Make = vehicle.Make;
+            vehicleToUpdate.Model = vehicle.Model;
+            vehicleToUpdate.Color = vehicle.Color;
+            vehicleToUpdate.Year= vehicle.Year;
+            vehicleToUpdate.vehicleIdentificationNumber = vehicle.vehicleIdentificationNumber;
+            vehicleToUpdate.vehicleRegistrationCertificateBase64 = vehicle.vehicleRegistrationCertificateBase64;
+            vehicleToUpdate.IsVerifiedByAdmin = vehicle.IsVerifiedByAdmin;
+            vehicleToUpdate.SomethingIsWrong = vehicle.SomethingIsWrong;
+            vehicleToUpdate.DateAdded= vehicle.DateAdded;   
+
+            await _dbContextTMParking.SaveChangesAsync();
+
+            return Ok(new { Message = "Vehicle update successfully." });
         }
     }
 }
