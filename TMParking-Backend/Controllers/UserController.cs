@@ -281,7 +281,7 @@ namespace TMParking_Backend.Controllers
 
             await _dbContextTMParking.SaveChangesAsync();
 
-            return Ok("User updated successfully.");
+            return Ok(new { Message = "User updated successfully." });
         }
 
         [HttpGet("{userId}/user-account")]
