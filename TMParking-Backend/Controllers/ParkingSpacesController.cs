@@ -82,7 +82,7 @@ namespace TMParking_Backend.Controllers
 
 
         [HttpPut("update-parking-spaces/{id}")]
-        public async Task<IActionResult> UpdateParkingSpaces(int id, ParkingSpaces parkingSpaces)
+        public async Task<IActionResult> UpdateParkingSpaces(int id, [FromBody] ParkingSpaces parkingSpaces)
         {
             var parkingSpacesToUpdate = await _dbContextTMParking.ParkingSpaces.FirstOrDefaultAsync(p => p.ParkingSpacesId == id);
 
@@ -111,7 +111,10 @@ namespace TMParking_Backend.Controllers
             parkingSpacesToUpdate.PaymentPerDay=parkingSpaces.PaymentPerDay;
             parkingSpacesToUpdate.PaymentForSubscription=parkingSpaces.PaymentForSubscription;
             parkingSpacesToUpdate.IsVerifiedByAdmin = parkingSpaces.IsVerifiedByAdmin;
-            parkingSpaces.SomethingIsWrong=parkingSpaces.SomethingIsWrong;
+            parkingSpacesToUpdate.SomethingIsWrong=parkingSpaces.SomethingIsWrong;
+            parkingSpacesToUpdate.UndergroundParkingLots = parkingSpaces.UndergroundParkingLots;
+            parkingSpacesToUpdate.MultistoreyCarPark = parkingSpaces.MultistoreyCarPark;
+            parkingSpacesToUpdate.PaidParking=parkingSpaces.PaidParking;
 
             await _dbContextTMParking.SaveChangesAsync();
 
