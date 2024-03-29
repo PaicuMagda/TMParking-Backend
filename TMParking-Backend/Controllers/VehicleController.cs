@@ -49,6 +49,18 @@ namespace TMParking_Backend.Controllers
             return user.Vehicles.ToList();
         }
 
+        [HttpGet("{idVehicle}")]
+        public async Task<IActionResult> GetVehicleById(int idVehicle) 
+        {
+            var vehicle = _dbContextTMParking.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == idVehicle);
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return Ok(vehicle);
+        }
+
 
         [HttpDelete("{vehicleId}")]
         public async Task<IActionResult> DeleteVehicleById(int vehicleId)

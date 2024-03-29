@@ -278,6 +278,7 @@ namespace TMParking_Backend.Controllers
             user.DateOfBirth = userForUpdate.DateOfBirth;
             user.PNC = userForUpdate.PNC;
             user.ImageUrl = userForUpdate.ImageUrl;
+            user.Password = userForUpdate.Password;
 
             await _dbContextTMParking.SaveChangesAsync();
 

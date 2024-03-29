@@ -115,6 +115,7 @@ namespace TMParking_Backend.Controllers
             parkingSpacesToUpdate.UndergroundParkingLots = parkingSpaces.UndergroundParkingLots;
             parkingSpacesToUpdate.MultistoreyCarPark = parkingSpaces.MultistoreyCarPark;
             parkingSpacesToUpdate.PaidParking=parkingSpaces.PaidParking;
+            
 
             await _dbContextTMParking.SaveChangesAsync();
 
