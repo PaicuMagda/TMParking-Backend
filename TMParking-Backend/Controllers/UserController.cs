@@ -261,7 +261,6 @@ namespace TMParking_Backend.Controllers
         public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] User userForUpdate)
         {
             var user = await _dbContextTMParking.Users.FindAsync(id);
-
             if (user == null)
             {
                 return NotFound("User Not Found!");
@@ -269,9 +268,8 @@ namespace TMParking_Backend.Controllers
 
             user.FirstName = userForUpdate.FirstName;
             user.LastName = userForUpdate.LastName;
-            user.Email = userForUpdate.Email;
             user.Password = userForUpdate.Password;
-            user.Role = userForUpdate.Role;
+            user.Role = "User";
             user.Address = userForUpdate.Address;
             user.ZipCode = userForUpdate.ZipCode;
             user.State = userForUpdate.State;
@@ -281,9 +279,24 @@ namespace TMParking_Backend.Controllers
             user.PNC = userForUpdate.PNC;
             user.ImageUrl = userForUpdate.ImageUrl;
 
+            var pass = CheckPasswordStrength(userForUpdate.Password);
+            bool existsEmail = await EmailAlreadyExistsAsync(userForUpdate.Email);
+            bool existsUsername = await UsernameAlreadyExistsAsync(userForUpdate.Username);
+
+            if ((userForUpdate.Email !=  user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
+            if (userForUpdate.Username != user.Username && existsUsername) return BadRequest(new { Message = "Username already exists !" });
+
+            user.Email = userForUpdate.Email;
+            user.Username = userForUpdate.Username;
+            user.Password = PasswordHasher.HashPassword(userForUpdate.Password);
+
+            if (!string.IsNullOrEmpty(pass))
+                return BadRequest(new { Message = pass.ToString() });
+
             await _dbContextTMParking.SaveChangesAsync();
 
-            return Ok("User updated successfully.");
+            return Ok(new { Message = "User updated successfully." });
+
         }
 
         [HttpGet("{userId}/user-account")]

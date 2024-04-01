@@ -26,6 +26,9 @@ namespace TMParking_Backend.Models
         public float PaymentForSubscription { get; set; }
         public bool IsVerifiedByAdmin { get; set; }
         public bool SomethingIsWrong { get; set; }
+        public bool UndergroundParkingLots { get; set; }
+        public bool MultistoreyCarPark { get; set; }
+        public bool PaidParking { get; set; }
         public int ParkingSpacesOwnerId { get; set; }
         public User ParkingSpacesOwner { get; set; }
     }
