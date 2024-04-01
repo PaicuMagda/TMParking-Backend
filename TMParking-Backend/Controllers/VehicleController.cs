@@ -52,7 +52,7 @@ namespace TMParking_Backend.Controllers
         [HttpGet("{idVehicle}")]
         public async Task<IActionResult> GetVehicleById(int idVehicle) 
         {
-            var vehicle = _dbContextTMParking.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == idVehicle);
+            var vehicle = await _dbContextTMParking.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == idVehicle);
 
             if (vehicle == null)
             {
