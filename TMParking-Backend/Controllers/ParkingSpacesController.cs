@@ -20,7 +20,10 @@ namespace TMParking_Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllParkingSpaces()
         {
-            var parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(p => p.ParkingSpacesOwner).ToListAsync();
+            var parkingSpaces = await _dbContextTMParking.ParkingSpaces
+                .Include(p => p.ParkingSpacesOwner)
+                .Include(s=>s.ParkingSpaceForOneParking).ToListAsync();
+
             return Ok(parkingSpaces);
         }
 
@@ -55,7 +58,8 @@ namespace TMParking_Backend.Controllers
         [HttpGet("{parkingSpacesId}/parkingSpaces")]
         public async Task<IActionResult> GetParkingSpacesById(int parkingSpacesId)
         { 
-           ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.FirstOrDefaultAsync(p=>p.ParkingSpacesId== parkingSpacesId);
+           ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.
+                Include(p=>p.ParkingSpaceForOneParking).FirstOrDefaultAsync(p=>p.ParkingSpacesId== parkingSpacesId);
 
             if (parkingSpaces == null)
             {

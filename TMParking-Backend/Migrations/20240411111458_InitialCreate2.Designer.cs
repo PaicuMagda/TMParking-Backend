@@ -2,7 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMParking_Backend.Data;
 
 #nullable disable
@@ -10,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240308224822_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240411111458_InitialCreate2")]
+    partial class InitialCreate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,6 +24,30 @@ namespace TMParking_Backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaceModel", b =>
+                {
+                    b.Property<int>("ParkingSpaceModelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParkingSpaceModelId"));
+
+                    b.Property<string>("Availability")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParkingSpacesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ParkingSpaceModelId");
+
+                    b.HasIndex("ParkingSpacesId");
+
+                    b.ToTable("ParkingSpacesForOneParkingSpace");
+                });
 
             modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaces", b =>
                 {
@@ -76,8 +102,14 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("LeasePermit")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("MultistoreyCarPark")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PaidParking")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ParkingSpacesOwnerId")
                         .HasColumnType("int");
@@ -97,11 +129,48 @@ namespace TMParking_Backend.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("UndergroundParkingLots")
+                        .HasColumnType("bit");
+
                     b.HasKey("ParkingSpacesId");
 
                     b.HasIndex("ParkingSpacesOwnerId");
 
                     b.ToTable("ParkingSpaces");
+                });
+
+            modelBuilder.Entity("TMParking_Backend.Models.Reservation", b =>
+                {
+                    b.Property<int>("ReservationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ParkingSpaceModelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReservationId");
+
+                    b.HasIndex("ParkingSpaceModelId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("TMParking_Backend.Models.TimisoaraArea", b =>
@@ -238,6 +307,17 @@ namespace TMParking_Backend.Migrations
                     b.ToTable("Vehicles");
                 });
 
+            modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaceModel", b =>
+                {
+                    b.HasOne("TMParking_Backend.Models.ParkingSpaces", "ParkingSpaces")
+                        .WithMany("ParkingSpaceForOneParking")
+                        .HasForeignKey("ParkingSpacesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParkingSpaces");
+                });
+
             modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaces", b =>
                 {
                     b.HasOne("TMParking_Backend.Models.User", "ParkingSpacesOwner")
@@ -247,6 +327,29 @@ namespace TMParking_Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("ParkingSpacesOwner");
+                });
+
+            modelBuilder.Entity("TMParking_Backend.Models.Reservation", b =>
+                {
+                    b.HasOne("TMParking_Backend.Models.ParkingSpaceModel", "ParkingSpaceModel")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ParkingSpaceModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TMParking_Backend.Models.User", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("TMParking_Backend.Models.Vehicle", "Vehicle")
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParkingSpaceModel");
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("TMParking_Backend.Models.Vehicle", b =>
@@ -260,9 +363,21 @@ namespace TMParking_Backend.Migrations
                     b.Navigation("VehicleOwner");
                 });
 
+            modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaceModel", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("TMParking_Backend.Models.ParkingSpaces", b =>
+                {
+                    b.Navigation("ParkingSpaceForOneParking");
+                });
+
             modelBuilder.Entity("TMParking_Backend.Models.User", b =>
                 {
                     b.Navigation("ParkingSpaces");
+
+                    b.Navigation("Reservations");
 
                     b.Navigation("Vehicles");
                 });

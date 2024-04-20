@@ -31,5 +31,6 @@ namespace TMParking_Backend.Models
         public bool PaidParking { get; set; }
         public int ParkingSpacesOwnerId { get; set; }
         public User ParkingSpacesOwner { get; set; }
+        public ICollection<ParkingSpaceModel> ParkingSpaceForOneParking { get;} = new List<ParkingSpaceModel>();
     }
 }

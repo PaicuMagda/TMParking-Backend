@@ -13,5 +13,7 @@ namespace TMParking_Backend.Data
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<TimisoaraArea> TimisoaraAreas { get; set; }
         public DbSet<ParkingSpaces>ParkingSpaces { get; set; }
+        public DbSet<ParkingSpaceModel> ParkingSpacesForOneParkingSpace{ get; set; }
+        public DbSet<Reservation>Reservations { get; set; } 
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace TMParking_Backend.Models
 {
     public class User
@@ -27,6 +26,7 @@ namespace TMParking_Backend.Models
         public string ImageUrl { get; set; }
         public ICollection<Vehicle> Vehicles { get;}=new List<Vehicle>();
         public ICollection<ParkingSpaces> ParkingSpaces { get;}=new List<ParkingSpaces>();
+        public ICollection<Reservation>Reservations { get; } = new List<Reservation>();
         public string FullName
         {
             get { return FirstName + " " + LastName; }
