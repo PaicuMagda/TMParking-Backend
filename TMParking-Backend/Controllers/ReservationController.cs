@@ -24,8 +24,8 @@ namespace TMParking_Backend.Controllers
                 Select(r => new 
                 { 
                     ReservationId=r.ReservationId,
-                    StartTime=r.StartTime,
-                    EndTime=r.EndTime,
+                    StartTime=r.StartDate,
+                    EndTime=r.EndDate,
                     ParkingSpaceName=r.ParkingSpaceModel.ParkingSpaces.Name,
                     ParkingLotName=r.ParkingSpaceModel.Name,
                     VehicleRegisteredNumber=r.Vehicle.vehicleIdentificationNumber,
@@ -39,14 +39,40 @@ namespace TMParking_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddReservation([FromBody] Reservation reservation) {
+        public async Task<IActionResult> AddReservation([FromBody] Reservation reservation)
+        {
 
-            if (reservation == null)
-                return BadRequest();
+            if (reservation == null || string.IsNullOrEmpty(reservation.VehicleRegistrationNumber) || string.IsNullOrEmpty(reservation.SpaceModelName))
+                return BadRequest("Invalid reservation data");
 
-            await _dbContextTMParking.Reservations.AddAsync(reservation);
-            await _dbContextTMParking.SaveChangesAsync();
-            return Ok(new { Message ="Reservaton added sucessfully!"});
+            var vehicle = _dbContextTMParking.Vehicles.FirstOrDefault(v => reservation.VehicleRegistrationNumber == v.vehicleIdentificationNumber);
+            var parkingLot = _dbContextTMParking.ParkingSpacesForOneParkingSpace.FirstOrDefault(p=>reservation.SpaceModelName == p.Name);
+
+            if (vehicle != null)
+            {
+                reservation.VehicleId = vehicle.VehicleId;
+                reservation.ParkingSpaceModelId=parkingLot.ParkingSpaceModelId;
+                await _dbContextTMParking.Reservations.AddAsync(reservation);
+                await _dbContextTMParking.SaveChangesAsync();
+                return Ok(new { Message = "Reservation added successfully!" });
+            }
+            else
+            {
+                return BadRequest("Vehicle not found!");
+            }
+        }
+
+        [HttpGet("{userId}/reservations")]
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationById(int userId)
+        {
+            var reservations = _dbContextTMParking.Reservations.Where(u => u.Vehicle.VehicleOwnerId == userId).ToList();
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+
+            return reservations.ToList();
         }
     }
 }

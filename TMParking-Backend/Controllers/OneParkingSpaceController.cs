@@ -46,7 +46,5 @@ namespace TMParking_Backend.Controllers
             }
             else return Ok(parkingSpaces.ParkingSpaceForOneParking);
         }
-
-        
     }
 }
