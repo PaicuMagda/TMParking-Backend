@@ -20,7 +20,19 @@ namespace TMParking_Backend.Controllers
         [HttpGet("vehicles")]
         public async Task<IActionResult> GetAllVehicles()
         {
-            var vehicles = await _dbContextTMParking.Vehicles.Include(v => v.VehicleOwner).ToListAsync();
+            var vehicles = await _dbContextTMParking.Vehicles.Include(v => v.VehicleOwner).Select(v => new 
+            { 
+                vehicleId =v.VehicleId,
+                make=v.Make,
+                model=v.Model,
+                color=v.Color,
+                year=v.Year,
+                imageProfileBase64=v.ImageProfileBase64,
+                vehicleOwner =v.VehicleOwner.FullName,
+                vehicleIdentificationNumber=v.vehicleIdentificationNumber,
+                vehicleRegistrationCertificateBase64 =v.vehicleRegistrationCertificateBase64
+
+            }).ToListAsync();
             return Ok(vehicles);
         }
 

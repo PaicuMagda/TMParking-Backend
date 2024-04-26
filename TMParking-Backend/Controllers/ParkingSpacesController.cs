@@ -22,7 +22,25 @@ namespace TMParking_Backend.Controllers
         {
             var parkingSpaces = await _dbContextTMParking.ParkingSpaces
                 .Include(p => p.ParkingSpacesOwner)
-                .Include(s=>s.ParkingSpaceForOneParking).ToListAsync();
+                .Include(s=>s.ParkingSpaceForOneParking).Select(p=> new 
+                {
+                    parkingSpacesId=p.ParkingSpacesId,
+                    OwnerName = p.ParkingSpacesOwner.FullName ,
+                    availableParkingSpaces=p.AvailableParkingSpaces,
+                    name=p.Name,
+                    startDate=p.StartDate,
+                    endDate=p.EndDate,
+                    isFree=p.IsFree,
+                    isVideoSurveilance=p.IsVideoSurveilance,
+                    isVerifiedByAdmin=p.IsVerifiedByAdmin,
+                    isPersonalVehicleAccepted=p.IsPersonalVehicleAccepted,
+                    isPublicTransportAccepted= p.IsPublicTransportAccepted,
+                    isAgriculturalMachineryAccepted=p.IsAgriculturalMachineryAccepted,
+                    isCargoVehicleAccepted=p.IsCargoVehicleAccepted,
+                    imageProfile=p.ImageProfile,
+                }
+                
+                ).ToListAsync();
 
             return Ok(parkingSpaces);
         }
