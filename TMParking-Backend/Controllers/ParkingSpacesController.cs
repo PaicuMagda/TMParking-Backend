@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
 using TMParking_Backend.Data;
 using TMParking_Backend.Models;
 
@@ -38,6 +39,7 @@ namespace TMParking_Backend.Controllers
                     isAgriculturalMachineryAccepted=p.IsAgriculturalMachineryAccepted,
                     isCargoVehicleAccepted=p.IsCargoVehicleAccepted,
                     imageProfile=p.ImageProfile,
+                    ownerId=p.ParkingSpacesOwnerId,
                 }
                 
                 ).ToListAsync();
@@ -59,16 +61,35 @@ namespace TMParking_Backend.Controllers
 
 
         [HttpGet("{userId}/parking-spaces")]
-        public async Task<ActionResult<IEnumerable<ParkingSpaces>>> GetMyParkingSpaces(int userId)
+        public async Task<IActionResult> GetMyParkingSpaces(int userId)
         {
-            var user = await _dbContextTMParking.Users.Include(u=>u.ParkingSpaces).FirstOrDefaultAsync(u=>u.UserId == userId);
+            var userParkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(u=>u.ParkingSpacesOwner).Where(p=>p.ParkingSpacesOwnerId == userId).Select(
+                p=> new 
+                {
+                    OwnerName = p.ParkingSpacesOwner.FullName,
+                    availableParkingSpaces = p.AvailableParkingSpaces,
+                    name = p.Name,
+                    startDate = p.StartDate,
+                    endDate = p.EndDate,
+                    isFree = p.IsFree,
+                    isVideoSurveilance = p.IsVideoSurveilance,
+                    isVerifiedByAdmin = p.IsVerifiedByAdmin,
+                    isPersonalVehicleAccepted = p.IsPersonalVehicleAccepted,
+                    isPublicTransportAccepted = p.IsPublicTransportAccepted,
+                    isAgriculturalMachineryAccepted = p.IsAgriculturalMachineryAccepted,
+                    isCargoVehicleAccepted = p.IsCargoVehicleAccepted,
+                    imageProfile = p.ImageProfile,
+                    ownerId = p.ParkingSpacesOwnerId,
 
-            if (user == null)
+                    }
+                ).ToListAsync();
+
+            if (userParkingSpaces == null)
             {
                 return NotFound();
             }
 
-            return user.ParkingSpaces.ToList();
+            return Ok(userParkingSpaces);
         
         }
 
