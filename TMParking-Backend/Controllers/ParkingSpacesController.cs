@@ -66,6 +66,7 @@ namespace TMParking_Backend.Controllers
             var userParkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(u=>u.ParkingSpacesOwner).Where(p=>p.ParkingSpacesOwnerId == userId).Select(
                 p=> new 
                 {
+                    parkingSpacesId = p.ParkingSpacesId,
                     OwnerName = p.ParkingSpacesOwner.FullName,
                     availableParkingSpaces = p.AvailableParkingSpaces,
                     name = p.Name,

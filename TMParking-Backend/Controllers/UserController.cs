@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Numerics;
+using System.Reflection.Emit;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -257,8 +260,71 @@ namespace TMParking_Backend.Controllers
             return Ok(users);
         }
 
+        //[Authorize]
+        [HttpGet("admin-page")]
+        public async Task<ActionResult<User>> GetUsersAdminPage()
+        {
+            var users = await _dbContextTMParking.Users.Include(u => u.Vehicles).Select(u =>
+            new {
+                userId = u.UserId,
+                email = u.Email,
+                firstName = u.FirstName,
+                lastName = u.LastName,
+                address = u.Address,
+                dateOfBirth = u.DateOfBirth,
+                role = u.Role,
+                zipCode = u.ZipCode,
+                state = u.State,
+                isActive = u.IsActive,
+                phone = u.Phone,
+                pnc = u.PNC,
+                imageUrl = u.ImageUrl,
+                vehiclesRegistered = u.Vehicles.Select(v => v.vehicleIdentificationNumber).ToList(),
+
+            })
+                .ToListAsync();
+            return Ok(users);
+        }
+
         [HttpPut("update-user/{id}")]
         public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] User userForUpdate)
+        {
+            var user = await _dbContextTMParking.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound("User Not Found!");
+            }
+
+            user.FirstName = userForUpdate.FirstName;
+            user.LastName = userForUpdate.LastName;
+            user.Password = userForUpdate.Password;
+            user.Role = "User";
+            user.Address = userForUpdate.Address;
+            user.ZipCode = userForUpdate.ZipCode;
+            user.State = userForUpdate.State;
+            user.IsActive = userForUpdate.IsActive;
+            user.Phone = userForUpdate.Phone;
+            user.DateOfBirth = userForUpdate.DateOfBirth;
+            user.PNC = userForUpdate.PNC;
+            user.ImageUrl = userForUpdate.ImageUrl;
+
+            bool existsEmail = await EmailAlreadyExistsAsync(userForUpdate.Email);
+            bool existsUsername = await UsernameAlreadyExistsAsync(userForUpdate.Username);
+
+            if ((userForUpdate.Email !=  user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
+            if (userForUpdate.Username != user.Username && existsUsername) return BadRequest(new { Message = "Username already exists !" });
+
+            user.Email = userForUpdate.Email;
+            user.Username = userForUpdate.Username;
+
+            await _dbContextTMParking.SaveChangesAsync();
+
+            return Ok(new { Message = "User updated successfully." });
+
+        }
+
+        [HttpPut("update-my-account/{id}")]
+        public async Task<ActionResult<User>> UpdateMyAccount(int id, [FromBody] User userForUpdate)
         {
             var user = await _dbContextTMParking.Users.FindAsync(id);
             if (user == null)
@@ -283,7 +349,7 @@ namespace TMParking_Backend.Controllers
             bool existsEmail = await EmailAlreadyExistsAsync(userForUpdate.Email);
             bool existsUsername = await UsernameAlreadyExistsAsync(userForUpdate.Username);
 
-            if ((userForUpdate.Email !=  user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
+            if ((userForUpdate.Email != user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
             if (userForUpdate.Username != user.Username && existsUsername) return BadRequest(new { Message = "Username already exists !" });
 
             user.Email = userForUpdate.Email;
@@ -298,6 +364,7 @@ namespace TMParking_Backend.Controllers
             return Ok(new { Message = "User updated successfully." });
 
         }
+
 
         [HttpGet("{userId}/user-account")]
         public async Task<ActionResult> GetUserLogged(int userId)
