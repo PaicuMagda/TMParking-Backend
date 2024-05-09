@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Any;
 using TMParking_Backend.Data;
 using TMParking_Backend.Models;
 
