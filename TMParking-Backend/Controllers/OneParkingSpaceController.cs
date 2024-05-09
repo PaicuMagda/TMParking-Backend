@@ -34,6 +34,18 @@ namespace TMParking_Backend.Controllers
             return Ok(new { Message = "Parking Spaces Added Sucessfully!" });
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> DeleteOneParkingSpace(string parkingSpaceName, int parkingSpaceId)
+        {
+            ParkingSpaceModel parkingLot = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.FirstOrDefaultAsync(p => p.Name == parkingSpaceName && p.ParkingSpacesId == parkingSpaceId);
+
+            if (parkingLot == null) return NotFound();
+
+            _dbContextTMParking.ParkingSpacesForOneParkingSpace.Remove(parkingLot);
+            await _dbContextTMParking.SaveChangesAsync();
+            return Ok(new { Message = "Parking Spaces was sucessfully deleted!" });
+        }
+
         [HttpGet("parking-lots")]
         public async Task<IActionResult> GetAllParkingLotsByParkingSpacesId(int parkingSpacesId )
         {
