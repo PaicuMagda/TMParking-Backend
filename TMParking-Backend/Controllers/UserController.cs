@@ -307,13 +307,10 @@ namespace TMParking_Backend.Controllers
             user.ImageUrl = userForUpdate.ImageUrl;
 
             bool existsEmail = await EmailAlreadyExistsAsync(userForUpdate.Email);
-            bool existsUsername = await UsernameAlreadyExistsAsync(userForUpdate.Username);
 
             if ((userForUpdate.Email !=  user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
-            if (userForUpdate.Username != user.Username && existsUsername) return BadRequest(new { Message = "Username already exists !" });
-
+       
             user.Email = userForUpdate.Email;
-            user.Username = userForUpdate.Username;
 
             await _dbContextTMParking.SaveChangesAsync();
 

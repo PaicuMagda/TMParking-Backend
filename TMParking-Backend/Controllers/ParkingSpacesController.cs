@@ -99,7 +99,7 @@ namespace TMParking_Backend.Controllers
         [HttpGet("{parkingSpacesId}/parkingSpaces")]
         public async Task<IActionResult> GetParkingSpacesById(int parkingSpacesId)
         { 
-           ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.
+           ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(x => x.ParkingSpacesOwner).
                 Include(p=>p.ParkingSpaceForOneParking).FirstOrDefaultAsync(p=>p.ParkingSpacesId== parkingSpacesId);
 
             if (parkingSpaces == null)

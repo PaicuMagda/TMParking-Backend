@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
 using TMParking_Backend.Data;
 using TMParking_Backend.Models;
 
@@ -50,15 +51,29 @@ namespace TMParking_Backend.Controllers
 
 
         [HttpGet("{userId}/vehicles")]
-        public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicles(int userId)
+        public async Task<ActionResult> GetVehicles(int userId)
         {
-            var user = await _dbContextTMParking.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(u => u.UserId == userId);
+            var vehicles = await _dbContextTMParking.Vehicles.Include(v => v.VehicleOwner).Where(v=> v.VehicleOwnerId == userId).Select(
+                v=> new
+            {
+                ownerId = v.VehicleOwnerId,
+                vehicleId = v.VehicleId,
+                make = v.Make,
+                model = v.Model,
+                color = v.Color,
+                year = v.Year,
+                imageProfileBase64 = v.ImageProfileBase64,
+                vehicleOwner = v.VehicleOwner.FullName,
+                vehicleIdentificationNumber = v.vehicleIdentificationNumber,
+                vehicleRegistrationCertificateBase64 = v.vehicleRegistrationCertificateBase64
 
-            if (user == null)
+            }).ToListAsync();
+
+            if (vehicles == null)
             {
                 return NotFound();
             }
-            return user.Vehicles.ToList();
+            return Ok(vehicles);
         }
 
         [HttpGet("{idVehicle}")]
