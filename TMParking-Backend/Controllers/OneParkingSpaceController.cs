@@ -49,14 +49,21 @@ namespace TMParking_Backend.Controllers
         [HttpGet("parking-lots")]
         public async Task<IActionResult> GetAllParkingLotsByParkingSpacesId(int parkingSpacesId )
         {
-            var parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(p=>p.ParkingSpaceForOneParking)
-                .FirstOrDefaultAsync(p => p.ParkingSpacesId == parkingSpacesId);
+            var parkingSpaces = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.Include(p=>p.ParkingSpaces).
+                Where(p=>p.ParkingSpacesId == parkingSpacesId).Select(p=> 
+                new { 
+                   ParkingLotId=p.ParkingSpacesId,
+                   Name=p.Name,
+                   Availability=p.Availability,
+                   parkingSpacesId=p.ParkingSpacesId,
+                })
+                .ToListAsync();
          
             if (parkingSpaces == null)
             {
                 return BadRequest();
             }
-            else return Ok(parkingSpaces.ParkingSpaceForOneParking);
+            else return Ok(parkingSpaces);
         }
     }
 }

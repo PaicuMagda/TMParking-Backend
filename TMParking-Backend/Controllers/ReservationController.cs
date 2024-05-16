@@ -63,16 +63,41 @@ namespace TMParking_Backend.Controllers
         }
 
         [HttpGet("{userId}/reservations")]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationById(int userId)
+        public async Task<ActionResult> GetReservationById(int userId)
         {
-            var reservations = _dbContextTMParking.Reservations.Where(u => u.Vehicle.VehicleOwnerId == userId).ToList();
+            var reservations = _dbContextTMParking.Reservations.Where(u => u.Vehicle.VehicleOwnerId == userId).
+                 Include(v => v.Vehicle).
+                Select(r => new
+                {
+                    ReservationId = r.ReservationId,
+                    StartTime = r.StartDate,
+                    EndTime = r.EndDate,
+                    ParkingSpaceName = r.ParkingSpaceModel.ParkingSpaces.Name,
+                    ParkingLotName = r.ParkingSpaceModel.Name,
+                    VehicleRegisteredNumber = r.Vehicle.vehicleIdentificationNumber,
+                    VehicleOwner = r.Vehicle.VehicleOwner.FullName,
+                    VehicleOwnerId = r.Vehicle.VehicleOwner.UserId,
+                    ProviderParkingSpace = r.ParkingSpaceModel.ParkingSpaces.ParkingSpacesOwner.FullName
+                }).ToList();
 
             if (reservations == null)
             {
                 return NotFound();
             }
 
-            return reservations.ToList();
+            return Ok(reservations);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteReservation(int reservationId)
+        {
+            Reservation reservation = await _dbContextTMParking.Reservations.FirstOrDefaultAsync(r => r.ReservationId == reservationId);
+
+            if(reservation == null) { return NotFound(); }
+
+            _dbContextTMParking.Reservations.Remove(reservation);
+            _dbContextTMParking.SaveChanges();
+            return Ok(new { Message = "Parking Spaces was successfully deleted !" });
         }
     }
 }

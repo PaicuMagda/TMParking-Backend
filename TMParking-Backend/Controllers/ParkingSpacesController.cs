@@ -99,8 +99,37 @@ namespace TMParking_Backend.Controllers
         [HttpGet("{parkingSpacesId}/parkingSpaces")]
         public async Task<IActionResult> GetParkingSpacesById(int parkingSpacesId)
         { 
-           ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(x => x.ParkingSpacesOwner).
-                Include(p=>p.ParkingSpaceForOneParking).FirstOrDefaultAsync(p=>p.ParkingSpacesId== parkingSpacesId);
+           var parkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(x => x.ParkingSpacesOwner).
+                Include(p => p.ParkingSpaceForOneParking).Select(p => new 
+                {
+                    parkingSpacesId=p.ParkingSpacesId,
+                    addedDate= p.AddedDate,
+                    address=p.Address,
+                    availableParkingSpaces=p.AvailableParkingSpaces,
+                    description=p.Description,
+                    endDate=p.EndDate,
+                    imageProfile=p.ImageProfile,
+                    isAgriculturalMachineryAccepted=p.IsAgriculturalMachineryAccepted,
+                    isCargoVehicleAccepted=p.IsCargoVehicleAccepted,
+                    isDraft=p.IsDraft,
+                    isFree=p.IsFree,
+                    isPersonalVehicleAccepted=p.IsPersonalVehicleAccepted,
+                    isPublicTransportAccepted=p.IsPublicTransportAccepted,
+                    isVerifiedByAdmin=p.IsVerifiedByAdmin,
+                    isVideoSurveilance=p.IsVideoSurveilance,
+                    leasePermit=p.LeasePermit,
+                    multistoreyCarPark=p.MultistoreyCarPark,
+                    name=p.Name,
+                    paidParking=p.PaidParking,
+                    parkingSpacesOwnerId=p.ParkingSpacesOwnerId,
+                    paymentForSubscription=p.PaymentForSubscription,
+                    paymentPerDay=p.PaymentPerDay,
+                    paymentPerHour=p.PaymentPerHour,
+                    somethingIsWrong=p.SomethingIsWrong,
+                    startDate=p.StartDate,
+                    undergroundParkingLots=p.UndergroundParkingLots,
+                    ownerName=p.ParkingSpacesOwner.FullName
+                }).FirstOrDefaultAsync(p=>p.parkingSpacesId == parkingSpacesId);
 
             if (parkingSpaces == null)
             {
