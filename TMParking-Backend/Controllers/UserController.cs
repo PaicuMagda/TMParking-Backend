@@ -278,7 +278,7 @@ namespace TMParking_Backend.Controllers
                 pnc = u.PNC,
                 imageUrl = u.ImageUrl,
                 vehiclesRegistered = u.Vehicles.Select(v => v.vehicleIdentificationNumber).ToList(),
-
+                dateAdded=u.AddedDate
             })
                 .ToListAsync();
             return Ok(users);

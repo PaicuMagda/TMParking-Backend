@@ -39,7 +39,8 @@ namespace TMParking_Backend.Controllers
                     isCargoVehicleAccepted=p.IsCargoVehicleAccepted,
                     imageProfile=p.ImageProfile,
                     ownerId=p.ParkingSpacesOwnerId,
-
+                    somethingIsWrong=p.SomethingIsWrong,
+                    dateAdded=p.AddedDate
                 }
                 
                 ).ToListAsync();

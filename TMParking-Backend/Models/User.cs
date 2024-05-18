@@ -24,6 +24,7 @@ namespace TMParking_Backend.Models
         public string DateOfBirth { get; set; }
         public int PNC { get; set; }
         public string ImageUrl { get; set; }
+        public DateTime AddedDate { get; set; }
         public ICollection<Vehicle> Vehicles { get;}=new List<Vehicle>();
         public ICollection<ParkingSpaces> ParkingSpaces { get;}=new List<ParkingSpaces>();
         public ICollection<Reservation>Reservations { get; } = new List<Reservation>();

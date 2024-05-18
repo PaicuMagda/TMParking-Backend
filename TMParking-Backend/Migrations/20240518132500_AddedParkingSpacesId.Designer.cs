@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMParking_Backend.Data;
 
@@ -11,9 +12,11 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    partial class DbContextTMParkingModelSnapshot : ModelSnapshot
+    [Migration("20240518132500_AddedParkingSpacesId")]
+    partial class AddedParkingSpacesId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,6 +156,12 @@ namespace TMParking_Backend.Migrations
                     b.Property<int>("ParkingSpaceModelId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ParkingSpaces")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParkingSpacesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PaymentMethod")
                         .HasColumnType("nvarchar(max)");
 
@@ -180,6 +189,8 @@ namespace TMParking_Backend.Migrations
                     b.HasKey("ReservationId");
 
                     b.HasIndex("ParkingSpaceModelId");
+
+                    b.HasIndex("ParkingSpacesId");
 
                     b.HasIndex("UserId");
 
@@ -355,6 +366,10 @@ namespace TMParking_Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TMParking_Backend.Models.ParkingSpaces", "parkingSpaces")
+                        .WithMany()
+                        .HasForeignKey("ParkingSpacesId");
+
                     b.HasOne("TMParking_Backend.Models.User", null)
                         .WithMany("Reservations")
                         .HasForeignKey("UserId");
@@ -368,6 +383,8 @@ namespace TMParking_Backend.Migrations
                     b.Navigation("ParkingSpaceModel");
 
                     b.Navigation("Vehicle");
+
+                    b.Navigation("parkingSpaces");
                 });
 
             modelBuilder.Entity("TMParking_Backend.Models.Vehicle", b =>

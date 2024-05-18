@@ -32,6 +32,7 @@ namespace TMParking_Backend.Controllers
                     VehicleOwner=r.Vehicle.VehicleOwner.FullName,
                     VehicleOwnerId=r.Vehicle.VehicleOwner.UserId,
                     ProviderParkingSpace=r.ParkingSpaceModel.ParkingSpaces.ParkingSpacesOwner.FullName
+                  
                 })
                 .ToListAsync();
 
@@ -63,9 +64,36 @@ namespace TMParking_Backend.Controllers
         }
 
         [HttpGet("{userId}/reservations")]
-        public async Task<ActionResult> GetReservationById(int userId)
+        public async Task<ActionResult> GetReservationByUserId(int userId)
         {
             var reservations = _dbContextTMParking.Reservations.Where(u => u.Vehicle.VehicleOwnerId == userId).
+                 Include(v => v.Vehicle).
+                Select(r => new
+                {
+                    ReservationId = r.ReservationId,
+                    StartTime = r.StartDate,
+                    EndTime = r.EndDate,
+                    ParkingSpaceName = r.ParkingSpaceModel.ParkingSpaces.Name,
+                    ParkingLotName = r.ParkingSpaceModel.Name,
+                    VehicleRegisteredNumber = r.Vehicle.vehicleIdentificationNumber,
+                    VehicleOwner = r.Vehicle.VehicleOwner.FullName,
+                    VehicleOwnerId = r.Vehicle.VehicleOwner.UserId,
+                    ProviderParkingSpace = r.ParkingSpaceModel.ParkingSpaces.ParkingSpacesOwner.FullName
+                }).ToList();
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservations);
+        }
+
+
+        [HttpGet("{parkingSpaceId}/reservationsForAParkingSpace")]
+        public async Task<ActionResult> GetReservationByParkingSpace(int parkingSpaceId)
+        {
+            var reservations = _dbContextTMParking.Reservations.Where(u =>u.ParkingSpaceModel.ParkingSpacesId == parkingSpaceId).
                  Include(v => v.Vehicle).
                 Select(r => new
                 {

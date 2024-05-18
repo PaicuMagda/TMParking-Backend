@@ -31,7 +31,8 @@ namespace TMParking_Backend.Controllers
                 imageProfileBase64=v.ImageProfileBase64,
                 vehicleOwner =v.VehicleOwner.FullName,
                 vehicleIdentificationNumber=v.vehicleIdentificationNumber,
-                vehicleRegistrationCertificateBase64 =v.vehicleRegistrationCertificateBase64
+                vehicleRegistrationCertificateBase64 =v.vehicleRegistrationCertificateBase64,
+                dateAdded=v.AddedDate,
 
             }).ToListAsync();
             return Ok(vehicles);
@@ -65,9 +66,10 @@ namespace TMParking_Backend.Controllers
                 imageProfileBase64 = v.ImageProfileBase64,
                 vehicleOwner = v.VehicleOwner.FullName,
                 vehicleIdentificationNumber = v.vehicleIdentificationNumber,
-                vehicleRegistrationCertificateBase64 = v.vehicleRegistrationCertificateBase64
+                vehicleRegistrationCertificateBase64 = v.vehicleRegistrationCertificateBase64,
+                dateAdded=v.AddedDate
 
-            }).ToListAsync();
+                }).ToListAsync();
 
             if (vehicles == null)
             {
@@ -121,7 +123,7 @@ namespace TMParking_Backend.Controllers
             vehicleToUpdate.vehicleRegistrationCertificateBase64 = vehicle.vehicleRegistrationCertificateBase64;
             vehicleToUpdate.IsVerifiedByAdmin = vehicle.IsVerifiedByAdmin;
             vehicleToUpdate.SomethingIsWrong = vehicle.SomethingIsWrong;
-            vehicleToUpdate.DateAdded= vehicle.DateAdded;   
+            vehicleToUpdate.AddedDate= vehicle.AddedDate;   
 
             await _dbContextTMParking.SaveChangesAsync();
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMParking_Backend.Data;
 
@@ -11,9 +12,11 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    partial class DbContextTMParkingModelSnapshot : ModelSnapshot
+    [Migration("20240518141744_AddParkingSpacesForReservationId")]
+    partial class AddParkingSpacesForReservationId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,6 +180,9 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("VehicleRegistrationNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("parkingSpacesForReservationId")
+                        .HasColumnType("int");
+
                     b.HasKey("ReservationId");
 
                     b.HasIndex("ParkingSpaceModelId");
@@ -184,6 +190,8 @@ namespace TMParking_Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("VehicleId");
+
+                    b.HasIndex("parkingSpacesForReservationId");
 
                     b.ToTable("Reservations");
                 });
@@ -365,9 +373,17 @@ namespace TMParking_Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TMParking_Backend.Models.ParkingSpaces", "parkingSpacesForReservation")
+                        .WithMany()
+                        .HasForeignKey("parkingSpacesForReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ParkingSpaceModel");
 
                     b.Navigation("Vehicle");
+
+                    b.Navigation("parkingSpacesForReservation");
                 });
 
             modelBuilder.Entity("TMParking_Backend.Models.Vehicle", b =>

@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240509070752_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20240517181819_AddedANewProperty-DateAdded")]
+    partial class AddedANewPropertyDateAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,10 +150,19 @@ namespace TMParking_Backend.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("NumberOfMonths")
+                        .HasColumnType("int");
+
                     b.Property<int>("ParkingSpaceModelId")
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("PriceToPay")
+                        .HasColumnType("real");
+
+                    b.Property<string>("ReservationType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpaceModelName")
@@ -205,6 +214,9 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -276,11 +288,11 @@ namespace TMParking_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleId"));
 
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ImageProfileBase64")
                         .HasColumnType("nvarchar(max)");
