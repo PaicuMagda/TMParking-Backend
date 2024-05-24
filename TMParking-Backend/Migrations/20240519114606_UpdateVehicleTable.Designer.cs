@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMParking_Backend.Data;
 
@@ -11,9 +12,11 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    partial class DbContextTMParkingModelSnapshot : ModelSnapshot
+    [Migration("20240519114606_UpdateVehicleTable")]
+    partial class UpdateVehicleTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Area")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AvailableParkingSpaces")
@@ -239,14 +239,14 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PNC")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PNC")
+                        .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Phone")
+                        .HasColumnType("int");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");

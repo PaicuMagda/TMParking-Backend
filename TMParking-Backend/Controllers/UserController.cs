@@ -128,7 +128,7 @@ namespace TMParking_Backend.Controllers
 
         private ClaimsPrincipal GetPrincipleFromExpiredToken(string token)
         {
-            var key = Encoding.UTF8.GetBytes("veryverysecret...");
+            var key = Encoding.ASCII.GetBytes("veryverysecret...");
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
@@ -190,7 +190,7 @@ namespace TMParking_Backend.Controllers
         {
             var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(a => a.Email == email);
 
-            if (user == null)
+            if (user is null)
             {
                 return NotFound(new
                 {
@@ -202,7 +202,7 @@ namespace TMParking_Backend.Controllers
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
             var emailToken = Convert.ToBase64String(tokenBytes);
             user.ResetPasswordToken = emailToken;
-            user.ResetPasswordExpiry = DateTime.Now.AddDays(1);
+            user.ResetPasswordExpiry = DateTime.Now.AddMinutes(15);
             string from = _configuration["EmailSettings:From"];
             var emailModel = new EmailModel(email, "ResetPassword!!", EmailBody.EmailStringBody(email, emailToken, nameUser));
             _emailService.SendEmail(emailModel);
@@ -220,7 +220,7 @@ namespace TMParking_Backend.Controllers
         {
             var newToken = resetPasswordDto.EmailToken.Replace(" ", "+");
             var user = await _dbContextTMParking.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Email == resetPasswordDto.Email);
-            if (user == null)
+            if (user is null)
             {
                 return NotFound(new
                 {
@@ -295,7 +295,7 @@ namespace TMParking_Backend.Controllers
 
             user.FirstName = userForUpdate.FirstName;
             user.LastName = userForUpdate.LastName;
-            user.Password = userForUpdate.Password;
+            user.Password = user.Password;
             user.Role = userForUpdate.Role;
             user.Address = userForUpdate.Address;
             user.ZipCode = userForUpdate.ZipCode;

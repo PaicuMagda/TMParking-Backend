@@ -29,6 +29,7 @@ namespace TMParking_Backend.Models
         public bool UndergroundParkingLots { get; set; }
         public bool MultistoreyCarPark { get; set; }
         public bool PaidParking { get; set; }
+        public string Area { get; set; }    
         public int ParkingSpacesOwnerId { get; set; }
         public User ParkingSpacesOwner { get; set; }
         public ICollection<ParkingSpaceModel> ParkingSpaceForOneParking { get;} = new List<ParkingSpaceModel>();

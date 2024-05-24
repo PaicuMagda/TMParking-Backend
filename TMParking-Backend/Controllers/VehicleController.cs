@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Any;
 using TMParking_Backend.Data;
 using TMParking_Backend.Models;
 
@@ -32,9 +31,11 @@ namespace TMParking_Backend.Controllers
                 vehicleOwner =v.VehicleOwner.FullName,
                 vehicleIdentificationNumber=v.vehicleIdentificationNumber,
                 vehicleRegistrationCertificateBase64 =v.vehicleRegistrationCertificateBase64,
-                dateAdded=v.AddedDate,
+                addedDate=v.AddedDate,
+                somethingIsWrong=v.SomethingIsWrong,
+                isVerifiedByAdmin=v.IsVerifiedByAdmin,
 
-            }).ToListAsync();
+    }).ToListAsync();
             return Ok(vehicles);
         }
 
@@ -67,7 +68,7 @@ namespace TMParking_Backend.Controllers
                 vehicleOwner = v.VehicleOwner.FullName,
                 vehicleIdentificationNumber = v.vehicleIdentificationNumber,
                 vehicleRegistrationCertificateBase64 = v.vehicleRegistrationCertificateBase64,
-                dateAdded=v.AddedDate
+                addedDate=v.AddedDate
 
                 }).ToListAsync();
 

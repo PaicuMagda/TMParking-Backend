@@ -31,7 +31,7 @@ namespace TMParking_Backend.Controllers
 
             await _dbContextTMParking.ParkingSpacesForOneParkingSpace.AddAsync(parkingSpace);
             await _dbContextTMParking.SaveChangesAsync();
-            return Ok(new { Message = "Parking Spaces Added Sucessfully!" });
+            return Ok(new { Message = "Parking Spaces Added Successfully!" });
         }
 
         [HttpDelete]
@@ -43,19 +43,22 @@ namespace TMParking_Backend.Controllers
 
             _dbContextTMParking.ParkingSpacesForOneParkingSpace.Remove(parkingLot);
             await _dbContextTMParking.SaveChangesAsync();
-            return Ok(new { Message = "Parking Spaces was sucessfully deleted!" });
+            return Ok(new { Message = "Parking Spaces was successfully deleted!" });
         }
 
         [HttpGet("parking-lots")]
         public async Task<IActionResult> GetAllParkingLotsByParkingSpacesId(int parkingSpacesId )
         {
-            var parkingSpaces = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.Include(p=>p.ParkingSpaces).
+            var parkingSpaces = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.Include(p => p.Reservations).Include(p=>p.ParkingSpaces).
                 Where(p=>p.ParkingSpacesId == parkingSpacesId).Select(p=> 
                 new { 
-                   ParkingLotId=p.ParkingSpacesId,
-                   Name=p.Name,
-                   Availability=p.Availability,
+                   parkingLotId=p.ParkingSpacesId,
+                   name=p.Name,
+                   availability=p.Availability,
                    parkingSpacesId=p.ParkingSpacesId,
+                   reservations = p.Reservations,
+                   startDate=p.ParkingSpaces.StartDate,
+                   endDate=p.ParkingSpaces.EndDate, 
                 })
                 .ToListAsync();
          

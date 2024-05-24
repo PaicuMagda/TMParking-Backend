@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMParking_Backend.Data;
 
@@ -11,9 +12,11 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    partial class DbContextTMParkingModelSnapshot : ModelSnapshot
+    [Migration("20240521202603_UpdateUserTable")]
+    partial class UpdateUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Area")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AvailableParkingSpaces")

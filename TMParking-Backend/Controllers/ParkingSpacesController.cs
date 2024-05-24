@@ -40,7 +40,12 @@ namespace TMParking_Backend.Controllers
                     imageProfile=p.ImageProfile,
                     ownerId=p.ParkingSpacesOwnerId,
                     somethingIsWrong=p.SomethingIsWrong,
-                    dateAdded=p.AddedDate
+                    dateAdded=p.AddedDate,
+                    paymentForSubscription=p.PaymentForSubscription,
+                    paymentPerDay=p.PaymentPerDay,
+                    paymetPerHour=p.PaymentPerHour,
+                    area=p.Area,
+                    address=p.Address,
                 }
                 
                 ).ToListAsync();
@@ -83,6 +88,7 @@ namespace TMParking_Backend.Controllers
                     imageProfile = p.ImageProfile,
                     ownerId = p.ParkingSpacesOwnerId,
                     somethingIsWrong= p.SomethingIsWrong,
+                    area=p.Area,    
 
                     }
                 ).ToListAsync();
@@ -129,7 +135,8 @@ namespace TMParking_Backend.Controllers
                     somethingIsWrong=p.SomethingIsWrong,
                     startDate=p.StartDate,
                     undergroundParkingLots=p.UndergroundParkingLots,
-                    ownerName=p.ParkingSpacesOwner.FullName
+                    ownerName=p.ParkingSpacesOwner.FullName,
+                    area=p.Area,
                 }).FirstOrDefaultAsync(p=>p.parkingSpacesId == parkingSpacesId);
 
             if (parkingSpaces == null)
@@ -178,7 +185,6 @@ namespace TMParking_Backend.Controllers
             parkingSpacesToUpdate.StartDate = parkingSpaces.StartDate;
             parkingSpacesToUpdate.EndDate = parkingSpaces.EndDate;
             parkingSpacesToUpdate.AddedDate = parkingSpaces.AddedDate;
-            parkingSpacesToUpdate.IsFree= parkingSpaces.IsFree;
             parkingSpacesToUpdate.IsVideoSurveilance=parkingSpaces.IsVideoSurveilance;
             parkingSpacesToUpdate.Description=parkingSpaces.Description;
             parkingSpacesToUpdate.IsDraft=parkingSpaces.IsDraft;
@@ -190,6 +196,7 @@ namespace TMParking_Backend.Controllers
             parkingSpacesToUpdate.UndergroundParkingLots = parkingSpaces.UndergroundParkingLots;
             parkingSpacesToUpdate.MultistoreyCarPark = parkingSpaces.MultistoreyCarPark;
             parkingSpacesToUpdate.PaidParking=parkingSpaces.PaidParking;
+            parkingSpacesToUpdate.Area=parkingSpaces.Area;
             
 
             await _dbContextTMParking.SaveChangesAsync();
