@@ -20,19 +20,19 @@ namespace TMParking_Backend.Controllers
         public async Task<IActionResult> GetAllReservations()
         {
             var reservations = await _dbContextTMParking.Reservations.
-                Include(v=>v.Vehicle).
-                Select(r => new 
-                { 
-                    ReservationId=r.ReservationId,
-                    StartTime=r.StartDate,
-                    EndTime=r.EndDate,
-                    ParkingSpaceName=r.ParkingSpaceModel.ParkingSpaces.Name,
-                    ParkingLotName=r.ParkingSpaceModel.Name,
-                    VehicleRegisteredNumber=r.Vehicle.vehicleIdentificationNumber,
-                    VehicleOwner=r.Vehicle.VehicleOwner.FullName,
-                    VehicleOwnerId=r.Vehicle.VehicleOwner.UserId,
-                    ProviderParkingSpace=r.ParkingSpaceModel.ParkingSpaces.ParkingSpacesOwner.FullName
-                  
+                Include(v => v.Vehicle).
+                Select(r => new
+                {
+                    ReservationId = r.ReservationId,
+                    StartTime = r.StartDate,
+                    EndTime = r.EndDate,
+                    ParkingSpaceName = r.ParkingSpaceModel.ParkingSpaces.Name,
+                    ParkingLotName = r.ParkingSpaceModel.Name,
+                    VehicleRegisteredNumber = r.Vehicle.vehicleIdentificationNumber,
+                    VehicleOwner = r.Vehicle.VehicleOwner.FullName,
+                    VehicleOwnerId = r.Vehicle.VehicleOwner.UserId,
+                    ProviderParkingSpace = r.ParkingSpaceModel.ParkingSpaces.ParkingSpacesOwner.FullName
+
                 })
                 .ToListAsync();
 
@@ -42,24 +42,30 @@ namespace TMParking_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> AddReservation([FromBody] Reservation reservation)
         {
-
-            if (reservation == null || string.IsNullOrEmpty(reservation.VehicleRegistrationNumber) || string.IsNullOrEmpty(reservation.SpaceModelName))
-                return BadRequest("Invalid reservation data");
-
             var vehicle = _dbContextTMParking.Vehicles.FirstOrDefault(v => reservation.VehicleRegistrationNumber == v.vehicleIdentificationNumber);
-            var parkingLot = _dbContextTMParking.ParkingSpacesForOneParkingSpace.FirstOrDefault(p=>reservation.SpaceModelName == p.Name);
+            var parkingLot = _dbContextTMParking.ParkingSpacesForOneParkingSpace.FirstOrDefault(p => reservation.SpaceModelName == p.Name);
 
-            if (vehicle != null)
+            if (parkingLot != null)
             {
                 reservation.VehicleId = vehicle.VehicleId;
-                reservation.ParkingSpaceModelId=parkingLot.ParkingSpaceModelId;
+                bool reservationExists = _dbContextTMParking.Reservations.
+                    Any(r => r.SpaceModelName == reservation.SpaceModelName && r.StartDate < reservation.EndDate && r.EndDate > reservation.StartDate);
+
+                if (reservationExists)
+
+                {
+                    return BadRequest(new { Message = "This time slot is already booked." });
+
+                }
+
+                reservation.ParkingSpaceModelId = parkingLot.ParkingSpaceModelId;
                 await _dbContextTMParking.Reservations.AddAsync(reservation);
                 await _dbContextTMParking.SaveChangesAsync();
                 return Ok(new { Message = "Reservation added successfully!" });
             }
             else
             {
-                return BadRequest("Vehicle not found!");
+                return BadRequest("Parking lot not found!");
             }
         }
 
@@ -70,9 +76,9 @@ namespace TMParking_Backend.Controllers
                  Include(v => v.Vehicle).
                 Select(r => new
                 {
-                    ReservationId = r.ReservationId,
-                    StartTime = r.StartDate,
-                    EndTime = r.EndDate,
+                    reservationId = r.ReservationId,
+                    startDate = r.StartDate,
+                    endDate = r.EndDate,
                     ParkingSpaceName = r.ParkingSpaceModel.ParkingSpaces.Name,
                     ParkingLotName = r.ParkingSpaceModel.Name,
                     VehicleRegisteredNumber = r.Vehicle.vehicleIdentificationNumber,
@@ -89,17 +95,38 @@ namespace TMParking_Backend.Controllers
             return Ok(reservations);
         }
 
+        [HttpGet("reservations/{parkingModelId}")]
+        public async Task<ActionResult> GetReservationsByParkingLotId(int parkingModelId)
+        {
+            var reservations = _dbContextTMParking.Reservations.Where(r => r.ParkingSpaceModelId == parkingModelId).
+                Include(r => r.Vehicle).Select(r => new
+                {
+                    reservationId = r.ReservationId,
+                    startDate = r.StartDate,
+                    endDate = r.EndDate,
+                    ParkingLotName = r.ParkingSpaceModel.Name,
+                    reservationType = r.ReservationType
+                }).ToList();
 
-        [HttpGet("{parkingSpaceId}/reservationsForAParkingSpace")]
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservations);
+        }
+
+
+        [HttpGet("{parkingSpaceId}/reservationsForABigParkingSpace")]
         public async Task<ActionResult> GetReservationByParkingSpace(int parkingSpaceId)
         {
-            var reservations = _dbContextTMParking.Reservations.Where(u =>u.ParkingSpaceModel.ParkingSpacesId == parkingSpaceId).
+            var reservations = _dbContextTMParking.Reservations.Where(u => u.ParkingSpaceModel.ParkingSpacesId == parkingSpaceId).
                  Include(v => v.Vehicle).
                 Select(r => new
                 {
-                    ReservationId = r.ReservationId,
-                    StartTime = r.StartDate,
-                    EndTime = r.EndDate,
+                    reservationId = r.ReservationId,
+                    startDate = r.StartDate,
+                    endDate = r.EndDate,
                     ParkingSpaceName = r.ParkingSpaceModel.ParkingSpaces.Name,
                     ParkingLotName = r.ParkingSpaceModel.Name,
                     VehicleRegisteredNumber = r.Vehicle.vehicleIdentificationNumber,
@@ -121,7 +148,7 @@ namespace TMParking_Backend.Controllers
         {
             Reservation reservation = await _dbContextTMParking.Reservations.FirstOrDefaultAsync(r => r.ReservationId == reservationId);
 
-            if(reservation == null) { return NotFound(); }
+            if (reservation == null) { return NotFound(); }
 
             _dbContextTMParking.Reservations.Remove(reservation);
             _dbContextTMParking.SaveChanges();

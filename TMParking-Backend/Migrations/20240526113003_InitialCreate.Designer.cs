@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240517181819_AddedANewProperty-DateAdded")]
-    partial class AddedANewPropertyDateAdded
+    [Migration("20240526113003_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,9 @@ namespace TMParking_Backend.Migrations
                     b.Property<int>("ParkingSpacesId")
                         .HasColumnType("int");
 
+                    b.Property<int>("bigParkingSpacesId")
+                        .HasColumnType("int");
+
                     b.HasKey("ParkingSpaceModelId");
 
                     b.HasIndex("ParkingSpacesId");
@@ -61,6 +64,9 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Area")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AvailableParkingSpaces")
@@ -239,14 +245,14 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PNC")
-                        .HasColumnType("int");
+                    b.Property<string>("PNC")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");

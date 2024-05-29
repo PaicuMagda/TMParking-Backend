@@ -52,7 +52,7 @@ namespace TMParking_Backend.Controllers
             var parkingSpaces = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.Include(p => p.Reservations).Include(p=>p.ParkingSpaces).
                 Where(p=>p.ParkingSpacesId == parkingSpacesId).Select(p=> 
                 new { 
-                   parkingLotId=p.ParkingSpacesId,
+                   parkingLotId=p.ParkingSpaceModelId,
                    name=p.Name,
                    availability=p.Availability,
                    parkingSpacesId=p.ParkingSpacesId,

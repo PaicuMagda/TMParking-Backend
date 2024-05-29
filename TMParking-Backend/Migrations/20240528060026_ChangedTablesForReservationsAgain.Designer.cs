@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240510070102_UpdateReservationInterface")]
-    partial class UpdateReservationInterface
+    [Migration("20240528060026_ChangedTablesForReservationsAgain")]
+    partial class ChangedTablesForReservationsAgain
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,9 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Area")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AvailableParkingSpaces")
@@ -180,6 +183,9 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("VehicleRegistrationNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("bigParkingSpacesId")
+                        .HasColumnType("int");
+
                     b.HasKey("ReservationId");
 
                     b.HasIndex("ParkingSpaceModelId");
@@ -215,6 +221,9 @@ namespace TMParking_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
@@ -236,14 +245,14 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PNC")
-                        .HasColumnType("int");
+                    b.Property<string>("PNC")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
@@ -285,11 +294,11 @@ namespace TMParking_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleId"));
 
+                    b.Property<DateTime>("AddedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("ImageProfileBase64")
                         .HasColumnType("nvarchar(max)");

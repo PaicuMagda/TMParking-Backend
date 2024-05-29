@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240519114606_UpdateVehicleTable")]
-    partial class UpdateVehicleTable
+    [Migration("20240528053814_ChangedTablesForReservations")]
+    partial class ChangedTablesForReservations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,9 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Area")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AvailableParkingSpaces")
@@ -180,6 +183,9 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("VehicleRegistrationNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("bigParkingSpacesId")
+                        .HasColumnType("int");
+
                     b.HasKey("ReservationId");
 
                     b.HasIndex("ParkingSpaceModelId");
@@ -239,14 +245,14 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PNC")
-                        .HasColumnType("int");
+                    b.Property<string>("PNC")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");

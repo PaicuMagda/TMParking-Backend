@@ -5,7 +5,7 @@
 namespace TMParking_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddParkingSpacesForReservationId : Migration
+    public partial class UpdateDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

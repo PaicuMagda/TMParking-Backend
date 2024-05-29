@@ -11,4 +11,4 @@ namespace TMParking_Backend.Models
         public ParkingSpaces ParkingSpaces {get; set;}
         public ICollection<Reservation> Reservations { get;}=new List<Reservation>();
     }
-}
+}   

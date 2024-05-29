@@ -9,16 +9,13 @@ namespace TMParking_Backend.Models
         public int ReservationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime ? EndDate { get; set; }
-
-        //public TimeSpan StartTime { get; set; }
-        //public TimeSpan EndTime { get; set; }
-
         public string PaymentMethod { get; set; }  
         public string VehicleRegistrationNumber { get; set; } 
         public string SpaceModelName { get; set; }
         public float PriceToPay { get; set; }
         public string ReservationType { get; set; }
         public int NumberOfMonths { get; set; }
+        public int bigParkingSpacesId { get; set; }
 
         [ForeignKey("ParkingSpaceModel")]
         public int ParkingSpaceModelId { get; set; }

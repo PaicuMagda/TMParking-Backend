@@ -180,6 +180,9 @@ namespace TMParking_Backend.Migrations
                     b.Property<string>("VehicleRegistrationNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("bigParkingSpacesId")
+                        .HasColumnType("int");
+
                     b.HasKey("ReservationId");
 
                     b.HasIndex("ParkingSpaceModelId");
