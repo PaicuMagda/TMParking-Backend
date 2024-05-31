@@ -16,6 +16,8 @@ namespace TMParking_Backend.Models
         public string ReservationType { get; set; }
         public int NumberOfMonths { get; set; }
         public int bigParkingSpacesId { get; set; }
+        public int UserId { get; set; }
+        public User Owner { get; set; }
 
         [ForeignKey("ParkingSpaceModel")]
         public int ParkingSpaceModelId { get; set; }

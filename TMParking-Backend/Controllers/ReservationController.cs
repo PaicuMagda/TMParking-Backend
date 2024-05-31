@@ -23,7 +23,7 @@ namespace TMParking_Backend.Controllers
                 Include(v => v.Vehicle).
                 Select(r => new
                 {
-                    ReservationId = r.ReservationId,
+                    reservationId = r.ReservationId,
                     StartTime = r.StartDate,
                     EndTime = r.EndDate,
                     ParkingSpaceName = r.ParkingSpaceModel.ParkingSpaces.Name,
@@ -54,7 +54,11 @@ namespace TMParking_Backend.Controllers
                 if (reservationExists)
 
                 {
-                    return BadRequest(new { Message = "This time slot is already booked." });
+                    return BadRequest(new
+                    {
+                        StatusCode = 400,
+                        Message = "This time slot is already booked."
+                    });
 
                 }
 

@@ -278,7 +278,26 @@ namespace TMParking_Backend.Controllers
                 pnc = u.PNC,
                 imageUrl = u.ImageUrl,
                 vehiclesRegistered = u.Vehicles.Select(v => v.vehicleIdentificationNumber).ToList(),
-                dateAdded=u.AddedDate
+                dateAdded=u.AddedDate,
+                parkingSpacesRegistered = u.ParkingSpaces.Select(u => u.Name).ToList(),
+             
+            })
+                .ToListAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("charts")]
+        public async Task<ActionResult<User>> GetUsersForCharts()
+        {
+            var users = await _dbContextTMParking.Users.
+                 Include(u => u.Vehicles)
+                .Include(u => u.Reservations).Select(u =>
+            new {
+                userId = u.UserId,
+                fullName=u.FullName,
+                vehiclesRegistered = u.Vehicles.ToArray().Length,
+                parkingSpacesRegistered = u.ParkingSpaces.ToArray().Length,
+                reservationsRegistered = u.Reservations.ToArray().Length,   
             })
                 .ToListAsync();
             return Ok(users);

@@ -163,7 +163,7 @@ namespace TMParking_Backend.Controllers
         }
 
 
-        [HttpPut("update-parking-spaces/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateParkingSpaces(int id, [FromBody] ParkingSpaces parkingSpaces)
         {
             var parkingSpacesToUpdate = await _dbContextTMParking.ParkingSpaces.FirstOrDefaultAsync(p => p.ParkingSpacesId == id);

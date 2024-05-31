@@ -106,7 +106,7 @@ namespace TMParking_Backend.Controllers
             return Ok(new { Message = "Vehicle was successfully deleted !" });
         }
 
-        [HttpPut("update-vehicle/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateVehicle(int id, [FromBody] Vehicle vehicle) {
 
             Vehicle vehicleToUpdate = await _dbContextTMParking.Vehicles.FirstOrDefaultAsync(v => v.VehicleId == id);
