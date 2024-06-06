@@ -268,6 +268,7 @@ namespace TMParking_Backend.Controllers
                 email = u.Email,
                 firstName = u.FirstName,
                 lastName = u.LastName,
+                fullName=u.FullName,
                 address = u.Address,
                 dateOfBirth = u.DateOfBirth,
                 role = u.Role,
