@@ -71,7 +71,6 @@ namespace TMParking_Backend.Controllers
                 {
                     parkingSpacesId = p.ParkingSpacesId,
                     OwnerName = p.ParkingSpacesOwner.FullName,
-                    availableParkingSpaces = p.AvailableParkingSpaces,
                     name = p.Name,
                     startDate = p.StartDate,
                     endDate = p.EndDate,
@@ -85,9 +84,9 @@ namespace TMParking_Backend.Controllers
                     imageProfile = p.ImageProfile,
                     ownerId = p.ParkingSpacesOwnerId,
                     somethingIsWrong= p.SomethingIsWrong,
-                    area=p.Area,    
-
-                    }
+                    area=p.Area,
+                    availableParkingSpaces = p.ParkingSpaceForOneParking.ToArray().Length,
+                }
                 ).ToListAsync();
 
             if (userParkingSpaces == null)
@@ -109,8 +108,8 @@ namespace TMParking_Backend.Controllers
                     parkingSpacesId=p.ParkingSpacesId,
                     addedDate= p.AddedDate,
                     address=p.Address,
-                    availableParkingSpaces=p.AvailableParkingSpaces,
-                    description=p.Description,
+                    availableParkingSpaces = p.ParkingSpaceForOneParking.ToArray().Length,
+                    description =p.Description,
                     endDate=p.EndDate,
                     imageProfile=p.ImageProfile,
                     isAgriculturalMachineryAccepted=p.IsAgriculturalMachineryAccepted,
@@ -152,7 +151,7 @@ namespace TMParking_Backend.Controllers
                 {
                     parkingSpacesId = p.ParkingSpacesId,
                     OwnerName = p.ParkingSpacesOwner.FullName,
-                    availableParkingSpaces = p.AvailableParkingSpaces,
+                    availableParkingSpaces = p.ParkingSpaceForOneParking.ToArray().Length,
                     name = p.Name,
                     startDate = p.StartDate,
                     endDate = p.EndDate,

@@ -52,7 +52,7 @@ namespace TMParking_Backend.Controllers
                    parkingSpacesId=p.ParkingSpacesId,
                    reservations = p.Reservations,
                    startDate=p.ParkingSpaces.StartDate,
-                   endDate=p.ParkingSpaces.EndDate, 
+                   endDate=p.ParkingSpaces.EndDate,              
                 })
                 .ToListAsync();
          
