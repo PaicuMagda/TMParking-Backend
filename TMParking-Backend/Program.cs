@@ -12,6 +12,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(
+    option => {
+        option.AddPolicy("MyPolicy", builder =>
+        {
+            builder.AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader();
+        });
+    }
+    );
+
 builder.Services.AddDbContext<DbContextTMParking>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("TMParkingConnectionString"));
@@ -35,13 +46,12 @@ builder.Services.AddAuthentication(x =>
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryverysecret...")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tmparking2024...")),
         ValidateAudience = false,
         ValidateIssuer = false,
         ClockSkew = TimeSpan.Zero,
     };
-}
-);
+});
 
 var app = builder.Build();
 
@@ -53,7 +63,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors("MyPolicy");
 
 app.UseAuthorization();
 

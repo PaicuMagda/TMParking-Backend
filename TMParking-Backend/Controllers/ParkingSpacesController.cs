@@ -26,7 +26,6 @@ namespace TMParking_Backend.Controllers
                 {
                     parkingSpacesId=p.ParkingSpacesId,
                     OwnerName = p.ParkingSpacesOwner.FullName ,
-                    availableParkingSpaces=p.AvailableParkingSpaces,
                     name=p.Name,
                     startDate=p.StartDate,
                     endDate=p.EndDate,
@@ -41,11 +40,9 @@ namespace TMParking_Backend.Controllers
                     ownerId=p.ParkingSpacesOwnerId,
                     somethingIsWrong=p.SomethingIsWrong,
                     dateAdded=p.AddedDate,
-                    paymentForSubscription=p.PaymentForSubscription,
-                    paymentPerDay=p.PaymentPerDay,
-                    paymetPerHour=p.PaymentPerHour,
-                    area=p.Area,
                     address=p.Address,
+                    area = p.Area,
+                    availableParkingSpaces = p.ParkingSpaceForOneParking.ToArray().Length,
                 }
                 
                 ).ToListAsync();
@@ -146,6 +143,33 @@ namespace TMParking_Backend.Controllers
         return Ok(parkingSpaces);
         }
 
+        [HttpGet("parking-spaces-table")]
+        public async Task<IActionResult> GetParkingSpacesForTable()
+        {
+            var parkingSpaces = await _dbContextTMParking.ParkingSpaces
+                .Include(p => p.ParkingSpacesOwner)
+                .Include(s => s.ParkingSpaceForOneParking).Select(p => new
+                {
+                    parkingSpacesId = p.ParkingSpacesId,
+                    OwnerName = p.ParkingSpacesOwner.FullName,
+                    availableParkingSpaces = p.AvailableParkingSpaces,
+                    name = p.Name,
+                    startDate = p.StartDate,
+                    endDate = p.EndDate,
+                    isFree = p.IsFree,
+                    isVideoSurveilance = p.IsVideoSurveilance,
+                    isPersonalVehicleAccepted = p.IsPersonalVehicleAccepted,
+                    isPublicTransportAccepted = p.IsPublicTransportAccepted,
+                    isAgriculturalMachineryAccepted = p.IsAgriculturalMachineryAccepted,
+                    isCargoVehicleAccepted = p.IsCargoVehicleAccepted,
+                    dateAdded = p.AddedDate,
+                    address = p.Address,
+                }
+
+                ).ToListAsync();
+
+            return Ok(parkingSpaces);
+        }
 
         [HttpDelete("{parkingSpacesId}")]
         public async Task<IActionResult> DeleteParkingSpaces(int parkingSpacesId)

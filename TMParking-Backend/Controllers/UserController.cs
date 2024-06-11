@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
@@ -128,7 +129,7 @@ namespace TMParking_Backend.Controllers
 
         private ClaimsPrincipal GetPrincipleFromExpiredToken(string token)
         {
-            var key = Encoding.ASCII.GetBytes("veryverysecret...");
+            var key = Encoding.ASCII.GetBytes("tmparking2024...");
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
@@ -282,6 +283,22 @@ namespace TMParking_Backend.Controllers
                 dateAdded=u.AddedDate,
                 parkingSpacesRegistered = u.ParkingSpaces.Select(u => u.Name).ToList(),
              
+            })
+                .ToListAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("users-table")]
+        public async Task<ActionResult<User>> GetUsersForTable()
+        {
+            var users = await _dbContextTMParking.Users.Include(u => u.Vehicles).Select(u =>
+            new {
+                userId = u.UserId,
+                email = u.Email,
+                fullName = u.FullName,
+                address = u.Address,
+                phone = u.Phone,
+                vehiclesRegistered = u.Vehicles.ToArray().Length,
             })
                 .ToListAsync();
             return Ok(users);

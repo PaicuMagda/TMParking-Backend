@@ -17,13 +17,6 @@ namespace TMParking_Backend.Controllers
             _dbContextTMParking = dbContextTMParking;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllParkingSpacesFromOneParking()
-        {
-            var parkingSpaces = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.ToListAsync();
-            return Ok(parkingSpaces);
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddOneParkingSpace([FromBody] ParkingSpaceModel parkingSpace)
         {

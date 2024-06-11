@@ -91,13 +91,22 @@ namespace TMParking_Backend.Controllers
                     ProviderParkingSpace = r.ParkingSpaceModel.ParkingSpaces.ParkingSpacesOwner.FullName
                 }).ToList();
 
+            var reservationsLength = reservations.Count();
+
             if (reservations == null)
             {
                 return NotFound();
             }
 
+            var reservationResult = new
+            {
+                NumberOfReservations = reservationsLength,
+                Reservations = reservations
+            };
+
             return Ok(reservations);
         }
+
 
         [HttpGet("reservations/{parkingModelId}")]
         public async Task<ActionResult> GetReservationsByParkingLotId(int parkingModelId)

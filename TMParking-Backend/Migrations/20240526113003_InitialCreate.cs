@@ -145,7 +145,7 @@ namespace TMParking_Backend.Migrations
                     table.PrimaryKey("PK_ParkingSpacesForOneParkingSpace", x => x.ParkingSpaceModelId);
                     table.ForeignKey(
                         name: "FK_ParkingSpacesForOneParkingSpace_ParkingSpaces_ParkingSpacesId",
-                        column: x => x.ParkingSpacesId,
+                        column: x => x.ParkingSpaceModelId,
                         principalTable: "ParkingSpaces",
                         principalColumn: "ParkingSpacesId",
                         onDelete: ReferentialAction.Cascade);
@@ -189,7 +189,7 @@ namespace TMParking_Backend.Migrations
                         column: x => x.VehicleId,
                         principalTable: "Vehicles",
                         principalColumn: "VehicleId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

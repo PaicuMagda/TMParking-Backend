@@ -39,6 +39,24 @@ namespace TMParking_Backend.Controllers
             return Ok(vehicles);
         }
 
+        [HttpGet("vehicles-tables")]
+        public async Task<IActionResult> GetVehiclesForTable()
+        {
+            var vehicles = await _dbContextTMParking.Vehicles.Include(v => v.VehicleOwner).Select(v => new
+            {
+                vehicleId = v.VehicleId,
+                make = v.Make,
+                model = v.Model,
+                color = v.Color,
+                year = v.Year,
+                vehicleOwner = v.VehicleOwner.FullName,
+                vehicleIdentificationNumber = v.vehicleIdentificationNumber,
+
+            }).ToListAsync();
+            return Ok(vehicles);
+        }
+
+
 
         [HttpPost("register-vehicle")]
         public async Task<IActionResult> RegisterVehicle([FromBody] Vehicle newVehicle)
@@ -68,7 +86,9 @@ namespace TMParking_Backend.Controllers
                 vehicleOwner = v.VehicleOwner.FullName,
                 vehicleIdentificationNumber = v.vehicleIdentificationNumber,
                 vehicleRegistrationCertificateBase64 = v.vehicleRegistrationCertificateBase64,
-                addedDate=v.AddedDate
+                addedDate=v.AddedDate,
+                isVerifiedByAdmin=v.IsVerifiedByAdmin,
+                somethingIsWrong=v.SomethingIsWrong,
 
                 }).ToListAsync();
 
@@ -101,6 +121,9 @@ namespace TMParking_Backend.Controllers
             {
                 return NotFound();
             }
+
+            var reservations = _dbContextTMParking.Reservations.Where(r => r.VehicleId == vehicleId).ToList();
+            _dbContextTMParking.Reservations.RemoveRange(reservations);
             _dbContextTMParking.Vehicles.Remove(vehicle);
             _dbContextTMParking.SaveChanges();
             return Ok(new { Message = "Vehicle was successfully deleted !" });
