@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240526113521_UpdateDatabase")]
-    partial class UpdateDatabase
+    [Migration("20240611095904_InitialCreated")]
+    partial class InitialCreated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,9 +40,6 @@ namespace TMParking_Backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ParkingSpacesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("bigParkingSpacesId")
                         .HasColumnType("int");
 
                     b.HasKey("ParkingSpaceModelId");
@@ -177,7 +174,7 @@ namespace TMParking_Backend.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("VehicleId")
@@ -185,6 +182,9 @@ namespace TMParking_Backend.Migrations
 
                     b.Property<string>("VehicleRegistrationNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("bigParkingSpacesId")
+                        .HasColumnType("int");
 
                     b.HasKey("ReservationId");
 
@@ -364,15 +364,19 @@ namespace TMParking_Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TMParking_Backend.Models.User", null)
+                    b.HasOne("TMParking_Backend.Models.User", "Owner")
                         .WithMany("Reservations")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TMParking_Backend.Models.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Owner");
 
                     b.Navigation("ParkingSpaceModel");
 

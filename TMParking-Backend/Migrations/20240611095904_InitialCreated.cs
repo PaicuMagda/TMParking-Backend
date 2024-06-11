@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TMParking_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreated : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -137,7 +137,6 @@ namespace TMParking_Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Availability = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    bigParkingSpacesId = table.Column<int>(type: "int", nullable: false),
                     ParkingSpacesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -145,7 +144,7 @@ namespace TMParking_Backend.Migrations
                     table.PrimaryKey("PK_ParkingSpacesForOneParkingSpace", x => x.ParkingSpaceModelId);
                     table.ForeignKey(
                         name: "FK_ParkingSpacesForOneParkingSpace_ParkingSpaces_ParkingSpacesId",
-                        column: x => x.ParkingSpaceModelId,
+                        column: x => x.ParkingSpacesId,
                         principalTable: "ParkingSpaces",
                         principalColumn: "ParkingSpacesId",
                         onDelete: ReferentialAction.Cascade);
@@ -165,9 +164,10 @@ namespace TMParking_Backend.Migrations
                     PriceToPay = table.Column<float>(type: "real", nullable: false),
                     ReservationType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NumberOfMonths = table.Column<int>(type: "int", nullable: false),
+                    bigParkingSpacesId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ParkingSpaceModelId = table.Column<int>(type: "int", nullable: false),
-                    VehicleId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    VehicleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,19 +177,19 @@ namespace TMParking_Backend.Migrations
                         column: x => x.ParkingSpaceModelId,
                         principalTable: "ParkingSpacesForOneParkingSpace",
                         principalColumn: "ParkingSpaceModelId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete:ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reservations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reservations_Vehicles_VehicleId",
                         column: x => x.VehicleId,
                         principalTable: "Vehicles",
                         principalColumn: "VehicleId",
-                        onDelete: ReferentialAction.Cascade);
+                       onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

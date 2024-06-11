@@ -31,9 +31,10 @@ namespace TMParking_Backend.Controllers
         public async Task<IActionResult> DeleteOneParkingSpace(string parkingSpaceName, int parkingSpaceId)
         {
             ParkingSpaceModel parkingLot = await _dbContextTMParking.ParkingSpacesForOneParkingSpace.FirstOrDefaultAsync(p => p.Name == parkingSpaceName && p.ParkingSpacesId == parkingSpaceId);
+            var reservationsToDelete = _dbContextTMParking.Reservations.Where(r => r.bigParkingSpacesId == parkingSpaceId && r.ParkingSpaceModel.Name == parkingSpaceName);
 
             if (parkingLot == null) return NotFound();
-
+            _dbContextTMParking.RemoveRange(reservationsToDelete);
             _dbContextTMParking.ParkingSpacesForOneParkingSpace.Remove(parkingLot);
             await _dbContextTMParking.SaveChangesAsync();
             return Ok(new { Message = "Parking Spaces was successfully deleted!" });

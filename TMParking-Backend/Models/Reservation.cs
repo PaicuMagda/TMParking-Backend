@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TMParking_Backend.Models
@@ -16,6 +17,8 @@ namespace TMParking_Backend.Models
         public string ReservationType { get; set; }
         public int NumberOfMonths { get; set; }
         public int bigParkingSpacesId { get; set; }
+
+        [ForeignKey("UserId")]
         public int UserId { get; set; }
         public User Owner { get; set; }
 

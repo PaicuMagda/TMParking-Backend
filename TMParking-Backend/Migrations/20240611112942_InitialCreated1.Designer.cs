@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240608205519_UpdateReservationsTable")]
-    partial class UpdateReservationsTable
+    [Migration("20240611112942_InitialCreated1")]
+    partial class InitialCreated1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

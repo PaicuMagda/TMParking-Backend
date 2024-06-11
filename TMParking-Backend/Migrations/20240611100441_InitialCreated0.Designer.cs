@@ -12,8 +12,8 @@ using TMParking_Backend.Data;
 namespace TMParking_Backend.Migrations
 {
     [DbContext(typeof(DbContextTMParking))]
-    [Migration("20240531063750_UpdateSpaceModelTable")]
-    partial class UpdateSpaceModelTable
+    [Migration("20240611100441_InitialCreated0")]
+    partial class InitialCreated0
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
