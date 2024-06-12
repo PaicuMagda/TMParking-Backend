@@ -367,7 +367,7 @@ namespace TMParking_Backend.Controllers
             user.FirstName = userForUpdate.FirstName;
             user.LastName = userForUpdate.LastName;
             user.Password = userForUpdate.Password;
-            user.Role = "User";
+            user.Role = user.Role;
             user.Address = userForUpdate.Address;
             user.ZipCode = userForUpdate.ZipCode;
             user.State = userForUpdate.State;
