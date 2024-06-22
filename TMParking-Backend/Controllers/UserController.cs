@@ -271,7 +271,7 @@ namespace TMParking_Backend.Controllers
                 email = u.Email,
                 firstName = u.FirstName,
                 lastName = u.LastName,
-                fullName=u.FullName,
+                fullName = u.FullName,
                 address = u.Address,
                 dateOfBirth = u.DateOfBirth,
                 role = u.Role,
@@ -282,9 +282,9 @@ namespace TMParking_Backend.Controllers
                 pnc = u.PNC,
                 imageUrl = u.ImageUrl,
                 vehiclesRegistered = u.Vehicles.Select(v => v.vehicleIdentificationNumber).ToList(),
-                dateAdded=u.AddedDate,
+                dateAdded = u.AddedDate,
                 parkingSpacesRegistered = u.ParkingSpaces.Select(u => u.Name).ToList(),
-             
+
             })
                 .ToListAsync();
             return Ok(users);
@@ -314,10 +314,10 @@ namespace TMParking_Backend.Controllers
                 .Include(u => u.Reservations).Select(u =>
             new {
                 userId = u.UserId,
-                fullName=u.FullName,
+                fullName = u.FullName,
                 vehiclesRegistered = u.Vehicles.ToArray().Length,
                 parkingSpacesRegistered = u.ParkingSpaces.ToArray().Length,
-                reservationsRegistered = u.Reservations.ToArray().Length,   
+                reservationsRegistered = u.Reservations.ToArray().Length,
             })
                 .ToListAsync();
             return Ok(users);
@@ -347,8 +347,8 @@ namespace TMParking_Backend.Controllers
 
             bool existsEmail = await EmailAlreadyExistsAsync(userForUpdate.Email);
 
-            if ((userForUpdate.Email !=  user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
-       
+            if ((userForUpdate.Email != user.Email) && existsEmail) return BadRequest(new { Message = "Email already exists !" });
+
             user.Email = userForUpdate.Email;
 
             await _dbContextTMParking.SaveChangesAsync();
@@ -358,7 +358,7 @@ namespace TMParking_Backend.Controllers
         }
 
         [HttpPut("update-password")]
-        public async Task<ActionResult<User>> UpdatePassword(string email, string password)
+        public async Task<ActionResult> UpdatePassword(string email, string password)
         {
             var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
