@@ -186,6 +186,8 @@ namespace TMParking_Backend.Controllers
             });
         }
 
+
+
         [HttpPost("send-email/{email}")]
         public async Task<IActionResult> SendEmail(string email)
         {
@@ -354,6 +356,24 @@ namespace TMParking_Backend.Controllers
             return Ok(new { Message = "User updated successfully." });
 
         }
+
+        [HttpPut("update-password")]
+        public async Task<ActionResult<User>> UpdatePassword(string email, string password)
+        {
+            var user = await _dbContextTMParking.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return NotFound("User Not Found!");
+            }
+
+            var pass = CheckPasswordStrength(password);
+            user.Password = PasswordHasher.HashPassword(password);
+
+            await _dbContextTMParking.SaveChangesAsync();
+            return Ok(new { Message = "User updated successfully." });
+
+        }
+
 
         [HttpPut("update-my-account/{id}")]
         public async Task<ActionResult<User>> UpdateMyAccount(int id, [FromBody] User userForUpdate)

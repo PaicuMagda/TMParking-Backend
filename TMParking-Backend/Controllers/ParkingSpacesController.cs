@@ -29,7 +29,7 @@ namespace TMParking_Backend.Controllers
                     name=p.Name,
                     startDate=p.StartDate,
                     endDate=p.EndDate,
-                    isFree=p.IsFree,
+                    paidParking=p.PaidParking,
                     isVideoSurveilance=p.IsVideoSurveilance,
                     isVerifiedByAdmin=p.IsVerifiedByAdmin,
                     isPersonalVehicleAccepted=p.IsPersonalVehicleAccepted,
@@ -66,7 +66,8 @@ namespace TMParking_Backend.Controllers
         [HttpGet("{userId}/parking-spaces")]
         public async Task<IActionResult> GetMyParkingSpaces(int userId)
         {
-            var userParkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(u=>u.ParkingSpacesOwner).Where(p=>p.ParkingSpacesOwnerId == userId).Select(
+            var userParkingSpaces = await _dbContextTMParking.ParkingSpaces.Include(u=>u.ParkingSpacesOwner)
+                .Where(p=>p.ParkingSpacesOwnerId == userId).Select(
                 p=> new 
                 {
                     parkingSpacesId = p.ParkingSpacesId,
@@ -74,7 +75,7 @@ namespace TMParking_Backend.Controllers
                     name = p.Name,
                     startDate = p.StartDate,
                     endDate = p.EndDate,
-                    isFree = p.IsFree,
+                    paidParking = p.PaidParking,
                     isVideoSurveilance = p.IsVideoSurveilance,
                     isVerifiedByAdmin = p.IsVerifiedByAdmin,
                     isPersonalVehicleAccepted = p.IsPersonalVehicleAccepted,
@@ -95,7 +96,6 @@ namespace TMParking_Backend.Controllers
             }
 
             return Ok(userParkingSpaces);
-        
         }
 
 
@@ -173,7 +173,8 @@ namespace TMParking_Backend.Controllers
         [HttpDelete("{parkingSpacesId}")]
         public async Task<IActionResult> DeleteParkingSpaces(int parkingSpacesId)
         {
-            ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.FirstOrDefaultAsync(p => p.ParkingSpacesId == parkingSpacesId);
+            ParkingSpaces parkingSpaces = await _dbContextTMParking.ParkingSpaces.
+                FirstOrDefaultAsync(p => p.ParkingSpacesId == parkingSpacesId);
 
             if (parkingSpaces == null)
             {
