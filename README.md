@@ -10,7 +10,7 @@ Pasul 4. Se navighează folosind comanda "cd/path-ul-către-director" către fol
          
 Pasul 5. Se rulează comanda 
 
-git clone https://gitlab.upt.ro/maria.paicu/TMParking-Backend.git
+git clone https://github.com/PaicuMagda/TMParking-Backend.git
 
 Pasul 6. După ce s-a descărcat proiectul se face dublu click pe fișierul TMParking-Backend.sln sau se deschide 
          direct proiectul în Visual Studio.
