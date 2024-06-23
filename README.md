@@ -1,4 +1,4 @@
-Pasul 1. Se instalează Git de pe site-ul https://git-scm.com/downloads
+## Pasul 1. Se instalează Git de pe site-ul https://git-scm.com/downloads
 
 ## Pasul 2
 
@@ -49,8 +49,8 @@ Se deschide SQL Server și se copiază "Server name" care apare într-o fereastr
 
 ## P4
 
-Se navighează din nou în proiectul din Visual Studio și se rulează următoarele comenzi în Package Manager Console :
+Se navighează din nou în proiectul din Visual Studio și se rulează următoarele comenzi în Package Manager Console 
 
-             `dotnet ef migrations add InitialCreate --project TMParking-Backend` (sau denumirea proiectului așa cum e salvat) 
+             dotnet ef migrations add InitialCreate --project TMParking-Backend (sau denumirea proiectului așa cum e salvat) 
              
-             `dotnet ef database update  --project TMParking-Backend` (sau denumirea proiectului așa cum e salvat)
+             dotnet ef database update  --project TMParking-Backend (sau denumirea proiectului așa cum e salvat)
