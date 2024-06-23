@@ -17,11 +17,8 @@ Pasul 6. După ce s-a descărcat proiectul se face dublu click pe fișierul TMPa
          
 Pasul 7. În terminal se rulează comanda dotnet build.
 
-Pasul 8. Se rulează comanda 
+Pasul 8. Se rulează comanda dotnet run și se va deschide automat pagina de Swagger unde se pot testa endpoint-urile.
 
-dotnet run 
-
-și se va deschide automat pagina de Swagger unde se pot testa endpoint-urile.
 
 Pentru legarea la baza de date:
 
@@ -37,6 +34,6 @@ P3. În proiectul Backend se deschide fișierul appsettings.json și se înlocui
 
 P4. Se navighează din nou în proiectul din Visual Studio și se rulează următoarele comenzi în Package Manager Console :
 
-             - dotnet ef migrations add InitialCreate --project TMParking-Backend (sau denumirea proiectului așa cum e salvat) 
+             dotnet ef migrations add InitialCreate --project TMParking-Backend (sau denumirea proiectului așa cum e salvat) 
              
-             - dotnet ef database update  --project TMParking-Backend (sau denumirea proiectului așa cum e salvat)
+             dotnet ef database update  --project TMParking-Backend (sau denumirea proiectului așa cum e salvat)
