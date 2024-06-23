@@ -1,4 +1,6 @@
-## Pasul 1. Se instalează Git de pe site-ul https://git-scm.com/downloads
+## Pasul 1
+
+Se instalează Git de pe site-ul https://git-scm.com/downloads
 
 ## Pasul 2
 
